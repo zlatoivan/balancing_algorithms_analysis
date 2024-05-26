@@ -20,7 +20,7 @@ func New(balancer balancer.Balancer) Server {
 	server := Server{
 		balancer:       balancer,
 		averageReqTime: 0,
-		reqTimeArr:     0,
+		reqTimeArr:     []float64{},
 	}
 	return server
 }
