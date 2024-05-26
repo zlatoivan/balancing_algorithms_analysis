@@ -20,7 +20,7 @@ func ping(backend string) {
 	}
 	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
 	status := fmt.Sprintf("%d", resp.StatusCode)
-	fmt.Printf("%s (balancer choice), req took %s (sec), %s (status)\n", green(backend), green(sec), green(status))
+	fmt.Printf("balancer choice %s | took %s sec | status %s\n", green(backend), green(sec), green(status))
 }
 
 func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
