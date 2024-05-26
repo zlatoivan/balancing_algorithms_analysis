@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+func green(s string) interface{} {
+	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 34, s)
+}
+
 func ping(backend string) {
 	start := time.Now()
 	client := http.Client{}
@@ -14,7 +18,7 @@ func ping(backend string) {
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	fmt.Printf("Balanser choice: %s. Req took %.4f seconds. Status code = %d\n", backend, time.Since(start).Seconds(), resp.StatusCode)
+	fmt.Printf("%s (balancer choice), req took %.4f (sec), %d (status)\n", green(backend), green(time.Since(start).Seconds()), green(resp.StatusCode))
 }
 
 func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
