@@ -17,6 +17,7 @@ func (s Server) createRouter() *chi.Mux {
 	r.Get("/", MainPage)
 
 	r.Get("/balancer", s.Balancer)
+	r.Get("/reload", s.Reload)
 
 	return r
 }

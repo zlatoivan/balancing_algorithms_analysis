@@ -11,11 +11,18 @@ import (
 )
 
 type Server struct {
-	balancer balancer.Balancer
+	balancer       balancer.Balancer
+	averageReqTime float64
+	reqTimeArr     []float64
 }
 
 func New(balancer balancer.Balancer) Server {
-	return Server{balancer: balancer}
+	server := Server{
+		balancer:       balancer,
+		averageReqTime: 0,
+		reqTimeArr:     0,
+	}
+	return server
 }
 
 func (s Server) Run(ctx context.Context, httpPort string) {

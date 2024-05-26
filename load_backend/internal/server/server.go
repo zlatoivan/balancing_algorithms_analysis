@@ -25,7 +25,7 @@ func (s Server) Run(ctx context.Context, httpPort string) {
 
 	wg := sync.WaitGroup{}
 
-	log.Printf("[httpServer] starting on %s\n", httpPort)
+	log.Printf("\n[httpServer] starting on %s\n", httpPort)
 
 	wg.Add(1)
 	go func() {
