@@ -12,7 +12,7 @@ func (s Server) createRouter() *chi.Mux {
 		middleware.Logger,
 		middleware.Recoverer,
 	)
-
+	
 	r.Get("/", s.MulMatrices)
 
 	return r

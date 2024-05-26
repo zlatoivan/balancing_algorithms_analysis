@@ -8,7 +8,7 @@ import (
 type RoundRobin struct{}
 
 func (b RoundRobin) Balance() string {
-	backend := fmt.Sprintf("%d.zlatoivan.ru", rand.IntN(3))
+	backend := fmt.Sprintf("%d.zlatoivan.ru", 1+rand.IntN(0))
 	fmt.Println("[round robin] balancer have chosen backend: ", backend)
 	return backend
 }
