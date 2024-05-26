@@ -8,6 +8,6 @@ import (
 type Random struct{}
 
 func (b Random) Balance() string {
-	backend := fmt.Sprintf("https://%d.zlatoivan.ru", 4+rand.IntN(1))
+	backend := fmt.Sprintf("https://%d.zlatoivan.ru", rand.IntN(3))
 	return backend
 }
