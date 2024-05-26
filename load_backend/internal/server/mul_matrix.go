@@ -34,17 +34,16 @@ func genRandMatrix(n int) [][]int {
 	return a
 }
 
-func timer(name string) func() {
-	start := time.Now()
-	return func() {
-		fmt.Printf("\n%s took %v seconds\n", name, time.Since(start).Seconds())
-	}
+func green(s string) string {
+	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
 func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
-	defer timer("MulMatrices")()
+	start := time.Now()
 	n := s.matrixSize
 	matrixA := genRandMatrix(n)
 	matrixB := genRandMatrix(n)
 	MultiplyMatrix(n, matrixA, matrixB)
+	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
+	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
 }
