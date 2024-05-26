@@ -8,7 +8,7 @@ import (
 )
 
 func green(s string) string {
-	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 34, s)
+	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
 func ping(backend string) {
