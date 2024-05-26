@@ -1,0 +1,3 @@
+server:
+  http_port: 7070
+  matrix_size: 240

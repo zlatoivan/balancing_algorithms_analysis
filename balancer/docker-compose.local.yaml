@@ -1,0 +1,96 @@
+services:
+  pg_db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5433:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+       - pg-data:/var/lib/postgresql/data
+
+  pg_db_test:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5431:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d test" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper:2888:3888
+    healthcheck:
+      test: echo stat | nc localhost 2181
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '2181:2181'
+      - '2888:2888'
+      - '3888:3888'
+
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ps aux | grep -q [k]afka
+#      test: ps augwwx | egrep [S]upportedKafka
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_LISTENERS: LISTENER_INT://kafka2:29092,LISTENER_EXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_INT://kafka2:29092,LISTENER_EXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INT:PLAINTEXT,LISTENER_EXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ZOOKEEPER: zookeeper:2181
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+
+volumes:
+  pg-data:

@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      - CONFIG_PATH
+    ports:
+      - '9000:9000'
+    hostname:
+      localhost
