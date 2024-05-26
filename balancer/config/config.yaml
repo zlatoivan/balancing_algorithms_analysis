@@ -1,5 +1,4 @@
-server:
-  http_port: 7070
-  balancer_name:
-    random
-#    round_robin
+http_port: 7070
+balancer_name:
+  random
+#  round_robin
