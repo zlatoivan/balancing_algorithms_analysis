@@ -50,4 +50,5 @@ func (s *Server) Balancer(_ http.ResponseWriter, _ *http.Request) {
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
 	s.averageReqTime = 0
 	s.reqTimeArr = []float64{}
+	fmt.Println("--- reload ---")
 }
