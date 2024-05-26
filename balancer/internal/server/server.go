@@ -14,18 +14,19 @@ type Server struct {
 	balancer       balancer.Balancer
 	averageReqTime float64
 	reqTimeArr     []float64
+	mx             sync.RWMutex
 }
 
-func New(balancer balancer.Balancer) Server {
+func New(balancer balancer.Balancer) *Server {
 	server := Server{
 		balancer:       balancer,
 		averageReqTime: 0,
 		reqTimeArr:     []float64{},
 	}
-	return server
+	return &server
 }
 
-func (s Server) Run(ctx context.Context, httpPort string) {
+func (s *Server) Run(ctx context.Context, httpPort string) {
 	router := s.createRouter()
 	httpServer := &http.Server{
 		Addr:    "localhost:" + httpPort,
