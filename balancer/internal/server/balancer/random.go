@@ -8,7 +8,7 @@ import (
 type Random struct{}
 
 func (b Random) Balance() string {
-	backend := fmt.Sprintf("%d.zlatoivan.ru", 1+rand.IntN(2))
+	backend := fmt.Sprintf("%d.zlatoivan.ru", 1+rand.IntN(0))
 	fmt.Println("[random] balancer have chosen backend: ", backend)
 	return backend
 }
