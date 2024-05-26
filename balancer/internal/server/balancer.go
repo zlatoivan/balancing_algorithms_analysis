@@ -8,14 +8,13 @@ import (
 )
 
 func ping(backend string) {
-	fmt.Printf("\nbalancer have chosen: %s\n", backend)
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get(backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
+	fmt.Printf("Balanser choice: %s. Req took %.4f seconds. Status code = %d\n", backend, time.Since(start).Seconds(), resp.StatusCode)
 }
 
 func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
