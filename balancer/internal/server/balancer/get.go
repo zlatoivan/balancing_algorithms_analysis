@@ -1,15 +1,10 @@
 package balancer
 
-import (
-	"fmt"
-)
-
 type Balancer interface {
 	Balance() string
 }
 
 func New(balancerName string) Balancer {
-	fmt.Println(balancerName)
 	var newBalancer Balancer
 	switch balancerName {
 	case "random":
