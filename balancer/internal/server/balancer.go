@@ -20,7 +20,7 @@ func green(s string) string {
 }
 
 func blue(s string) string {
-	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 94, s)
+	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
 func (s *Server) ping(backend string) {
