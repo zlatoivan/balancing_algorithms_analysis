@@ -23,5 +23,6 @@ func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
+	fmt.Println(backend)
 	fmt.Printf("Status code to %s - %d\n", backend, resp.StatusCode)
 }
