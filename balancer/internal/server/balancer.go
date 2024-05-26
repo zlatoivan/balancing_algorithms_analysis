@@ -8,6 +8,7 @@ import (
 )
 
 func ping(backend string) {
+	fmt.Printf("\nbalancer have chosen: %s\n", backend)
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get(backend)
@@ -20,6 +21,5 @@ func ping(backend string) {
 func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	fmt.Printf("\nbalancer have chosen: %s\n", backend)
 	go ping(backend)
 }
