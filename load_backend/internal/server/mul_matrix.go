@@ -41,6 +41,7 @@ func green(s string) string {
 func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
 	start := time.Now()
 	n := s.matrixSize
+	fmt.Println(n)
 	matrixA := genRandMatrix(n)
 	matrixB := genRandMatrix(n)
 	MultiplyMatrix(n, matrixA, matrixB)
