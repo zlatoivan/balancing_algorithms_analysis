@@ -19,10 +19,11 @@ func (s Server) Balancer(w http.ResponseWriter, r *http.Request) {
 	backend := s.balancer.Balance()
 	client := http.Client{}
 	defer timer("Get req to" + backend)
+	start := time.Now()
 	resp, err := client.Get(backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	fmt.Println(backend)
-	fmt.Printf("Status code to %s - %d\n", backend, resp.StatusCode)
+	fmt.Printf("\nStatus code to %s - %d\n", backend, resp.StatusCode)
+	fmt.Printf("\nTOOOK %v seconds\n", time.Since(start).Seconds())
 }
