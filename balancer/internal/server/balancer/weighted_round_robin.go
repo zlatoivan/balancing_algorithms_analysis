@@ -5,9 +5,9 @@ import (
 	"math/rand/v2"
 )
 
-type WeightedRoundRobin struct{}
+type RoundRobin struct{}
 
-func (b WeightedRoundRobin) Balance() string {
+func (b RoundRobin) Balance() string {
 	backend := fmt.Sprintf("%d.zlatoivan.ru", rand.IntN(1))
 	fmt.Println("[round robin] balancer have chosen backend: ", backend)
 	return backend
