@@ -47,10 +47,7 @@ func (s *Server) Balancer(_ http.ResponseWriter, _ *http.Request) {
 	backend := s.balancer.Balance()
 	wg := sync.WaitGroup{}
 	wg.Add(1)
-	go func() {
-		s.ping(backend)
-		wg.Done()
-	}()
+	s.ping(backend)
 	wg.Wait()
 }
 
