@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -40,15 +39,15 @@ func green(s string) string {
 }
 
 func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
-	//start := time.Now()
-	//n := s.matrixSize
-	//matrixA := genRandMatrix(n)
-	//matrixB := genRandMatrix(n)
-	//MultiplyMatrix(n, matrixA, matrixB)
-	//sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
-	//fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
+	start := time.Now()
+	n := s.matrixSize
+	matrixA := genRandMatrix(n)
+	matrixB := genRandMatrix(n)
+	MultiplyMatrix(n, matrixA, matrixB)
+	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
+	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
 
-	slp := 1
-	time.Sleep(1 * time.Second)
-	fmt.Printf("sleep %s sec", green(strconv.Itoa(slp)))
+	//slp := 1
+	//time.Sleep(1 * time.Second)
+	//fmt.Printf("sleep %s sec", green(strconv.Itoa(slp)))
 }
