@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -45,10 +44,7 @@ func (s *Server) ping(backend string) {
 func (s *Server) Balancer(_ http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	wg := sync.WaitGroup{}
-	wg.Add(1)
 	go s.ping(backend)
-	wg.Wait()
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
