@@ -41,10 +41,11 @@ func (s *Server) ping(backend string) {
 	fmt.Printf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
 }
 
-func (s *Server) Balancer(_ http.ResponseWriter, _ *http.Request) {
+func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
 	go s.ping(backend)
+	w.WriteHeader(http.StatusPermanentRedirect)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
