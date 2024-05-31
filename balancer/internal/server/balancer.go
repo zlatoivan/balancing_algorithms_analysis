@@ -23,13 +23,14 @@ func blue(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
-func (s *Server) ping(backend string) {
+func (s *Server) ping(backend string, statusCh chan<- int) {
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get(backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
+	statusCh <- resp.StatusCode
 	sec := time.Since(start).Seconds()
 	s.mx.Lock()
 	s.reqTimeArr = append(s.reqTimeArr, sec)
@@ -44,8 +45,9 @@ func (s *Server) ping(backend string) {
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	go s.ping(backend)
-	w.WriteHeader(http.StatusPermanentRedirect)
+	statusCh := make(chan int)
+	s.ping(backend, statusCh)
+	w.WriteHeader(<-statusCh)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
