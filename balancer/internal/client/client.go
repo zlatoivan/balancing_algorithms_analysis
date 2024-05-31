@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"sync"
@@ -9,13 +10,24 @@ import (
 )
 
 func ping() {
-	start := time.Now()
+	//start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://zlatoivan.ru/balancer")
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
+	defer resp.Body.Close()
+
+	fmt.Printf("%d ", resp.StatusCode)
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Printf("io.ReadAll: %v", err)
+		}
+		bodyString := string(bodyBytes)
+		fmt.Println(bodyString)
+	}
+	//fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
 }
 
 func main() {
