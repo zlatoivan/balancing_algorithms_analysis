@@ -35,7 +35,7 @@ func getAllTimesStr(lastTimesBack map[string][]float64, avgTimeBack map[string]f
 	return allTms
 }
 
-func (s *Server) ping(backend string) string {
+func (s *Server) ping(backend string, w http.ResponseWriter) string {
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
@@ -61,17 +61,19 @@ func (s *Server) ping(backend string) string {
 	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
 	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
 	fmt.Printf(ans)
+
+	_, err = w.Write([]byte(ans))
+	if err != nil {
+		fmt.Printf("w.Write: %v\n", err)
+	}
+
 	return ans
 }
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	resp := s.ping(backend)
-	_, err := w.Write([]byte(resp))
-	if err != nil {
-		fmt.Printf("w.Write: %v\n", err)
-	}
+	go s.ping(backend, w)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
