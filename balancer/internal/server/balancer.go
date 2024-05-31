@@ -51,7 +51,7 @@ func (s *Server) ping(backend string) string {
 	for back, times := range s.lastTimesBack {
 		tms := ""
 		for _, tt := range times {
-			tms += fmt.Sprintf("%.4f", tt)
+			tms += fmt.Sprintf("%.4f ", tt)
 		}
 		t += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, s.avgTimeBack[back], tms)
 	}
