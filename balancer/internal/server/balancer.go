@@ -47,6 +47,7 @@ func (s *Server) ping(backend string) string {
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
+	fmt.Println(ans)
 	return ans
 }
 

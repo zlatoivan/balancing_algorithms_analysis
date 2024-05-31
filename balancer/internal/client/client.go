@@ -43,6 +43,6 @@ func main() {
 	}
 	wg.Wait()
 	sec := time.Since(start).Seconds()
-	rps := 100 / sec
+	rps := 10 / sec
 	fmt.Printf("\nRPS = %.4f\n\n", rps)
 }
