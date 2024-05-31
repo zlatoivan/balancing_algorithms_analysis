@@ -10,7 +10,7 @@ func New(balancerName string, hosts []string) Balancer {
 	case "random":
 		newBalancer = Random{hosts: hosts}
 	case "round_robin":
-		newBalancer = RoundRobin{hosts: hosts}
+		newBalancer = RoundRobin{hosts: hosts, last: 0}
 	case "weighted_round_robin":
 		newBalancer = WeightedRoundRobin{hosts: hosts}
 	}
