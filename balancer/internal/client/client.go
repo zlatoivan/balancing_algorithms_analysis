@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -32,22 +31,22 @@ func ping() {
 }
 
 func main() {
-	start := time.Now()
-z	n := 10
-	wg := sync.WaitGroup{}
+	//start := time.Now()
+	n := 10
+	//wg := sync.WaitGroup{}
 	for i := 0; i < n; i++ {
-		wg.Add(1)
-		go func() {
-			ping()
-			wg.Done()
-		}()
-		//ping()
+		//wg.Add(1)
+		//go func() {
+		//	ping()
+		//	wg.Done()
+		//}()
+		ping()
 	}
-	wg.Wait()
+	//wg.Wait()
 
-	//time.Sleep(2 * time.Second)
+	time.Sleep(2 * time.Second)
 
-	sec := time.Since(start).Seconds()
-	rps := float64(n) / sec
-	fmt.Printf("\nRPS = %.4f\n\n", rps)
+	//sec := time.Since(start).Seconds()
+	//rps := float64(n) / sec
+	//fmt.Printf("\nRPS = %.4f\n\n", rps)
 }
