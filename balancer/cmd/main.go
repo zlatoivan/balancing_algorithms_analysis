@@ -32,6 +32,7 @@ func bootstrap(ctx context.Context) error {
 	//balancer1 := balancer.New(cfg.BalancerName, cfg.Hosts)
 
 	server1 := server.New(cfg.Hosts)
+	fmt.Println(cfg.Hosts)
 
 	server1.Run(ctx, cfg.HttpPort)
 	if err != nil {
