@@ -2,9 +2,12 @@ package server
 
 import (
 	"fmt"
+	"math"
 	"math/rand/v2"
 	"net/http"
 	"time"
+
+	"github.com/go-echarts/go-echarts/v2/opts"
 )
 
 func MultiplyMatrix(n int, matrixA [][]int, matrixB [][]int) [][]int {
@@ -38,10 +41,23 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
+func genYSin() []opts.LineData {
+	y := make([]opts.LineData, 0)
+	for i := 0; i < 40; i++ {
+		val := math.Sin(float64(i)*math.Pi/8) + 1 // синус
+		//val += rand.Float64() / 5                 // шум
+		val = val - math.Mod(val, 0.01) // 2 знака после запятой
+		y = append(y, opts.LineData{Value: val})
+	}
+	return y
+}
+
 func (s *Server) Duration(_ http.ResponseWriter, _ *http.Request) {
+	//slp := s.timeSleep
 	slp := s.timeSleep
 	time.Sleep(time.Duration(slp) * time.Second)
 	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
+	s.timeSleep = s.timeSleep + math.Pi/8
 }
 
 //func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
