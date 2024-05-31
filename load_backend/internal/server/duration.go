@@ -42,7 +42,7 @@ func green(s string) string {
 func (s *Server) Duration(_ http.ResponseWriter, _ *http.Request) {
 	//slp := s.timeSleep
 	s.mx.RLock()
-	slp := (math.Sin(s.timeSleep) + 1) * 1.5
+	slp := (math.Sin(s.timeSleep) + 1) * 3
 	s.mx.RUnlock()
 
 	time.Sleep(time.Duration(slp) * time.Second)
