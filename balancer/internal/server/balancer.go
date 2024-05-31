@@ -23,14 +23,13 @@ func blue(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
-func (s *Server) ping(backend string, statusCh chan<- int) {
+func (s *Server) ping(backend string) int {
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get(backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	statusCh <- resp.StatusCode
 	sec := time.Since(start).Seconds()
 	s.mx.Lock()
 	s.reqTimeArr = append(s.reqTimeArr, sec)
@@ -40,14 +39,14 @@ func (s *Server) ping(backend string, statusCh chan<- int) {
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.averageReqTime)
 	fmt.Printf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
+	return resp.StatusCode
 }
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	statusCh := make(chan int)
-	s.ping(backend, statusCh)
-	w.WriteHeader(<-statusCh)
+	resp := s.ping(backend)
+	w.WriteHeader(resp)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
