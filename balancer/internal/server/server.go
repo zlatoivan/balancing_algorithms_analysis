@@ -14,16 +14,18 @@ type Server struct {
 	balancer      balancer.Balancer
 	lastTimesBack map[string][]float64
 	avgTimeBack   map[string]float64
-	lastTimesAll  []float64
-	avgTimeAll    float64
-	mx            sync.RWMutex
+	//lastTimesAll  []float64
+	avgTimeAll float64
+	mx         sync.RWMutex
 }
 
 func New(balancer balancer.Balancer) *Server {
 	server := Server{
-		balancer:     balancer,
-		lastTimesAll: []float64{},
-		avgTimeAll:   0,
+		balancer: balancer,
+		//lastTimesAll: []float64{},
+		lastTimesBack: make(map[string][]float64),
+		avgTimeBack:   make(map[string]float64),
+		avgTimeAll:    0,
 	}
 	return &server
 }

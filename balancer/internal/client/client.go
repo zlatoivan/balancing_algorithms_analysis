@@ -21,7 +21,7 @@ func ping() {
 func main() {
 	start := time.Now()
 	wg := sync.WaitGroup{}
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
 			ping()
