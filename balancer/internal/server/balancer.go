@@ -48,15 +48,15 @@ func (s *Server) ping(w http.ResponseWriter) string {
 	}
 	//sec := time.Since(start).Seconds()
 	defer resp.Body.Close()
-	secStr := fmt.Sprintf("%d\n", resp.StatusCode)
+	body := fmt.Sprintf("%d\n", resp.StatusCode)
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
 			log.Printf("io.ReadAll: %v\n", err)
 		}
-		secStr = string(bodyBytes)
+		body = string(bodyBytes)
 	}
-	sec, err := strconv.ParseFloat(secStr, 64)
+	sec, err := strconv.ParseFloat(body, 64)
 	if err == nil {
 		fmt.Printf("strconv.ParseFloat: %v", err)
 	}
