@@ -3,13 +3,13 @@ package balancer
 import "fmt"
 
 type RoundRobin struct {
-	Hosts []string
+	hosts []string
 	Last  int
 }
 
 func (b RoundRobin) Balance() string {
-	backend := b.Hosts[b.Last]
-	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.Hosts))
-	b.Last = (b.Last + 1) % len(b.Hosts)
+	backend := b.hosts[b.Last]
+	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.hosts))
+	b.Last = (b.Last + 1) % len(b.hosts)
 	return backend
 }

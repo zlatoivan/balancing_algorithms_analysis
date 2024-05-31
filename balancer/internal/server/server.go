@@ -19,9 +19,9 @@ type Server struct {
 	mx         sync.RWMutex
 }
 
-func New(b balancer.Balancer, hosts []string) *Server {
+func New(balancer balancer.Balancer) *Server {
 	server := Server{
-		balancer: balancer.RoundRobin{Hosts: hosts, Last: 0},
+		balancer: balancer,
 		//lastTimesAll: []float64{},
 		lastTimesBack: make(map[string][]float64),
 		avgTimeBack:   make(map[string]float64),
