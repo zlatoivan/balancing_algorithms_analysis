@@ -23,6 +23,18 @@ func blue(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
+func getAllTimesStr(lastTimesBack map[string][]float64, avgTimeBack map[string]float64) string {
+	allTms := ""
+	for back, times := range lastTimesBack {
+		tms := ""
+		for _, tt := range times {
+			tms += fmt.Sprintf("%.4f ", tt)
+		}
+		allTms += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, avgTimeBack[back], tms)
+	}
+	return allTms
+}
+
 func (s *Server) ping(backend string) string {
 	start := time.Now()
 	client := http.Client{}
@@ -47,15 +59,7 @@ func (s *Server) ping(backend string) string {
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
-	t := ""
-	for back, times := range s.lastTimesBack {
-		tms := ""
-		for _, tt := range times {
-			tms += fmt.Sprintf("%.4f ", tt)
-		}
-		t += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, s.avgTimeBack[back], tms)
-	}
-	ans += t
+	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
 	fmt.Printf(ans)
 	return ans
 }
