@@ -38,16 +38,18 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
-	//start := time.Now()
-	//n := s.matrixSize
-	//matrixA := genRandMatrix(n)
-	//matrixB := genRandMatrix(n)
-	//MultiplyMatrix(n, matrixA, matrixB)
-	//sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
-	//fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
-
-	slp := 1.0
+func (s *Server) Duration(_ http.ResponseWriter, _ *http.Request) {
+	slp := s.timeSleep
 	time.Sleep(time.Duration(slp) * time.Second)
 	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
 }
+
+//func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
+//	start := time.Now()
+//	n := s.matrixSize
+//	matrixA := genRandMatrix(n)
+//	matrixB := genRandMatrix(n)
+//	MultiplyMatrix(n, matrixA, matrixB)
+//	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
+//	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
+//}

@@ -29,7 +29,7 @@ func bootstrap(ctx context.Context) error {
 		return fmt.Errorf("config.New: %w", err)
 	}
 
-	server1 := server.New(cfg.MatrixSize)
+	server1 := server.New(cfg.MatrixSize, cfg.TimeSleep)
 
 	server1.Run(ctx, cfg.HttpPort)
 	if err != nil {

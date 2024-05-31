@@ -10,13 +10,18 @@ import (
 
 type Server struct {
 	matrixSize int
+	timeSleep  float64
 }
 
-func New(matrixSize int) Server {
-	return Server{matrixSize: matrixSize}
+func New(matrixSize int, timeSleep float64) Server {
+	server := Server{
+		matrixSize: matrixSize,
+		timeSleep:  timeSleep,
+	}
+	return server
 }
 
-func (s Server) Run(ctx context.Context, httpPort string) {
+func (s *Server) Run(ctx context.Context, httpPort string) {
 	router := s.createRouter()
 	httpServer := &http.Server{
 		Addr:    "localhost:" + httpPort,
