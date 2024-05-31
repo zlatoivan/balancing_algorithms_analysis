@@ -1,8 +1,8 @@
 http_port: 7070
 hosts: [
   '1.zlatoivan.ru',
-  '2.zlatoivan.ru',
-  '3.zlatoivan.ru'
+#  '2.zlatoivan.ru',
+#  '3.zlatoivan.ru'
 ]
 balancer_name:
 #  random
