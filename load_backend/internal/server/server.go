@@ -11,6 +11,7 @@ import (
 type Server struct {
 	matrixSize int
 	timeSleep  float64
+	mx         sync.RWMutex
 }
 
 func New(matrixSize int, timeSleep float64) Server {
