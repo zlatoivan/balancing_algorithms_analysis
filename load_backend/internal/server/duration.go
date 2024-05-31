@@ -42,7 +42,7 @@ func green(s string) string {
 func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
 	//slp := s.timeSleep
 	s.mx.Lock()
-	slp := (math.Sin(s.timeSleep) + 1) * 1.5
+	slp := (math.Sin(s.timeSleep) + 1) * 3
 	time.Sleep(time.Duration(slp) * time.Second)
 	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
 	s.timeSleep += +math.Pi / 8
