@@ -23,7 +23,7 @@ func blue(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
-func (s *Server) ping(backend string) *http.Response {
+func (s *Server) ping(backend string) string {
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
@@ -46,15 +46,18 @@ func (s *Server) ping(backend string) *http.Response {
 	secStr := fmt.Sprintf("%.4f", sec)
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
-	fmt.Printf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
-	return resp
+	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
+	return ans
 }
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
 	resp := s.ping(backend)
-	w.WriteHeader(resp)
+	_, err := w.Write([]byte(resp))
+	if err != nil {
+		fmt.Printf("w.Write: %v\n", err)
+	}
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {

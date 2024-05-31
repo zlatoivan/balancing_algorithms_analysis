@@ -22,7 +22,7 @@ func ping() {
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
-			log.Printf("io.ReadAll: %v", err)
+			log.Printf("io.ReadAll: %v\n", err)
 		}
 		bodyString := string(bodyBytes)
 		fmt.Println(bodyString)
