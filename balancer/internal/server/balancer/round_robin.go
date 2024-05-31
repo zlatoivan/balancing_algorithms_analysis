@@ -8,15 +8,15 @@ import (
 type RoundRobin struct {
 	Hosts []string
 	Last  int
-	Mx    sync.RWMutex
+	mx    sync.Mutex
 }
 
 func (b *RoundRobin) ChooseBackend() string {
-	b.Mx.Lock()
+	b.mx.Lock()
 	backend := b.Hosts[b.Last]
 	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.Hosts))
 	b.Last = (b.Last + 1) % len(b.Hosts)
-	b.Mx.Unlock()
+	b.mx.Unlock()
 
 	return backend
 }

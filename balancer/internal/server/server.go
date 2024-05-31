@@ -16,7 +16,7 @@ type Server struct {
 	avgTimeBack   map[string]float64
 	//lastTimesAll  []float64
 	avgTimeAll float64
-	mx         sync.RWMutex
+	mx         sync.Mutex
 }
 
 func New(hosts []string) *Server {
@@ -24,7 +24,6 @@ func New(hosts []string) *Server {
 		balancer: &balancer.RoundRobin{
 			Hosts: hosts,
 			Last:  0,
-			Mx:    sync.RWMutex{},
 		},
 		//lastTimesAll: []float64{},
 		lastTimesBack: make(map[string][]float64),

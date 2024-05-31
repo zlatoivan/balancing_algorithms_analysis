@@ -11,15 +11,15 @@ import (
 type Server struct {
 	matrixSize int
 	timeSleep  float64
-	mx         sync.RWMutex
+	mx         sync.Mutex
 }
 
-func New(matrixSize int, timeSleep float64) Server {
+func New(matrixSize int, timeSleep float64) *Server {
 	server := Server{
 		matrixSize: matrixSize,
 		timeSleep:  timeSleep,
 	}
-	return server
+	return &server
 }
 
 func (s *Server) Run(ctx context.Context, httpPort string) {
