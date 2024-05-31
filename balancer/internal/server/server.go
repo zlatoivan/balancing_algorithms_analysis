@@ -6,12 +6,10 @@ import (
 	"net/http"
 	"sync"
 	"time"
-
-	"balancing_algorithms_analysis/internal/server/balancer"
 )
 
 type Server struct {
-	balancer      balancer.Balancer
+	balancer      interface{}
 	lastTimesBack map[string][]float64
 	avgTimeBack   map[string]float64
 	//lastTimesAll  []float64
@@ -19,7 +17,7 @@ type Server struct {
 	mx         sync.RWMutex
 }
 
-func New(balancer balancer.Balancer) *Server {
+func New(balancer interface{}) *Server {
 	server := Server{
 		balancer: balancer,
 		//lastTimesAll: []float64{},
