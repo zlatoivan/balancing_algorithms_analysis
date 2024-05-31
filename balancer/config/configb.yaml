@@ -1,0 +1,9 @@
+http_port: 7070
+hosts: [
+  'localhost:7071',
+  'localhost:7072',
+  #  'localhost:7073'
+]
+balancer_name:
+  #  random
+  round_robin

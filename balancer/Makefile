@@ -1,3 +1,7 @@
+.PHONY: run-b
+run-b: ## run local
+	CONFIG_PATH=config/configb.yaml go run cmd/main.go
+
 
 # ---------- help ----------
 .PHONY: help

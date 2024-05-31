@@ -1,3 +1,9 @@
+.PHONY: run-1
+run-1: ## run local
+	CONFIG_PATH=config/config1.yaml go run cmd/main.go
+.PHONY: run-2
+run-2: ## run local
+	CONFIG_PATH=config/config2.yaml go run cmd/main.go
 
 # ---------- help ----------
 .PHONY: help

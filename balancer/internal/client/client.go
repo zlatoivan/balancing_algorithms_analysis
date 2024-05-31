@@ -13,6 +13,7 @@ func ping() {
 	//start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://zlatoivan.ru/balancer")
+	//resp, err := client.Get("http://localhost:7070/balancer")
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
