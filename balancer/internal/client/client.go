@@ -25,7 +25,7 @@ func ping() {
 			log.Printf("io.ReadAll: %v\n", err)
 		}
 		bodyString := string(bodyBytes)
-		fmt.Println(bodyString)
+		fmt.Printf("%s\n", bodyString)
 	}
 	//fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
 }
