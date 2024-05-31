@@ -1,13 +1,13 @@
 package balancer
 
 import (
-	"fmt"
 	"math/rand/v2"
 )
 
-type Random struct{}
+type Random struct {
+	hosts []string
+}
 
 func (b Random) Balance() string {
-	backend := fmt.Sprintf("%d.zlatoivan.ru", rand.IntN(3)+1)
-	return backend
+	return b.hosts[rand.IntN(3)]
 }

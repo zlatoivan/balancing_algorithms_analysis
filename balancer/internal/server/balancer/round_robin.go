@@ -1,14 +1,12 @@
 package balancer
 
-import (
-	"fmt"
-	"math/rand/v2"
-)
+type RoundRobin struct {
+	hosts []string
+	last  int
+}
 
-type WeightedRoundRobin struct{}
-
-func (b WeightedRoundRobin) Balance() string {
-	backend := fmt.Sprintf("%d.zlatoivan.ru", rand.IntN(1))
-	fmt.Println("[round robin] balancer have chosen backend: ", backend)
+func (b RoundRobin) Balance() string {
+	backend := b.hosts[b.last]
+	b.last = (b.last + 1) % len(b.hosts)
 	return backend
 }

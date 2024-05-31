@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	HttpPort     string `yaml:"http_port" env-default:"9000"`
-	BalancerName string `yaml:"balancer_name" env-default:"round_robin"`
+	HttpPort     string   `yaml:"http_port" env-default:"9000"`
+	BalancerName string   `yaml:"balancer_name" env-default:"round_robin"`
+	Hosts        []string `yaml:"hosts"`
 }
 
 func New() (Config, error) {

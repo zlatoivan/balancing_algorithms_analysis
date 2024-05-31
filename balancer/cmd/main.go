@@ -30,7 +30,7 @@ func bootstrap(ctx context.Context) error {
 		return fmt.Errorf("config.New: %w", err)
 	}
 
-	balancer1 := balancer.New(cfg.BalancerName)
+	balancer1 := balancer.New(cfg.BalancerName, cfg.Hosts)
 
 	server1 := server.New(balancer1)
 
