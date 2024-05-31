@@ -106,7 +106,7 @@ func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 		s.ping(w)
 		wg.Done()
 	}()
-	//wg.Wait()
+	wg.Wait()
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
