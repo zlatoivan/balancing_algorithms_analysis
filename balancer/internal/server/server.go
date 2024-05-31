@@ -11,17 +11,19 @@ import (
 )
 
 type Server struct {
-	balancer       balancer.Balancer
-	averageReqTime float64
-	reqTimeArr     []float64
-	mx             sync.RWMutex
+	balancer      balancer.Balancer
+	lastTimesBack map[string][]float64
+	avgTimeBack   map[string]float64
+	lastTimesAll  []float64
+	avgTimeAll    float64
+	mx            sync.RWMutex
 }
 
 func New(balancer balancer.Balancer) *Server {
 	server := Server{
-		balancer:       balancer,
-		averageReqTime: 0,
-		reqTimeArr:     []float64{},
+		balancer:     balancer,
+		lastTimesAll: []float64{},
+		avgTimeAll:   0,
 	}
 	return &server
 }
