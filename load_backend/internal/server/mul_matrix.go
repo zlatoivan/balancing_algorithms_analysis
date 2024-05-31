@@ -38,7 +38,7 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
+func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
 	//start := time.Now()
 	//n := s.matrixSize
 	//matrixA := genRandMatrix(n)
@@ -49,5 +49,5 @@ func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
 
 	slp := 1.0
 	time.Sleep(time.Duration(slp) * time.Second)
-	fmt.Printf("sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
+	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
 }
