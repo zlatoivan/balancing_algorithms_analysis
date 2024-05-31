@@ -99,7 +99,7 @@ func (s *Server) ping(w http.ResponseWriter) string {
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
-	s.ping(w)
+	go s.ping(w)
 
 	//wg := sync.WaitGroup{}
 	//wg.Add(1)
