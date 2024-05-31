@@ -39,7 +39,7 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func (s *Server) Duration(_ http.ResponseWriter, _ *http.Request) {
+func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
 	//slp := s.timeSleep
 	s.mx.RLock()
 	slp := (math.Sin(s.timeSleep) + 1) * 3
@@ -51,6 +51,11 @@ func (s *Server) Duration(_ http.ResponseWriter, _ *http.Request) {
 	s.mx.Lock()
 	s.timeSleep += +math.Pi / 8
 	s.mx.Unlock()
+
+	_, err := w.Write([]byte(fmt.Sprintf("%.4f", slp)))
+	if err != nil {
+		fmt.Printf("w.Write: %v\n", err)
+	}
 }
 
 //func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {

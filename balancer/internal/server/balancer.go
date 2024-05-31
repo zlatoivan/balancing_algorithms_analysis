@@ -2,10 +2,10 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"sync"
-	"time"
 )
 
 func mean(data []float64) float64 {
@@ -39,13 +39,22 @@ func getAllTimesStr(lastTimesBack map[string][]float64, avgTimeBack map[string]f
 func (s *Server) ping(w http.ResponseWriter) string {
 	backend := s.balancer.Balance()
 
-	start := time.Now()
+	//start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	sec := time.Since(start).Seconds()
+	//sec := time.Since(start).Seconds()
+	defer resp.Body.Close()
+	sec := fmt.Sprintf("%d\n", resp.StatusCode)
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Printf("io.ReadAll: %v\n", err)
+		}
+		sec = string(bodyBytes)
+	}
 
 	s.mx.Lock()
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
