@@ -59,6 +59,6 @@ func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
 	s.avgTimeAll = 0
-	s.lastTimesAll = []float64{}
+	//s.lastTimesAll = []float64{}
 	fmt.Println("--- reload ---")
 }
