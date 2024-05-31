@@ -32,7 +32,7 @@ func ping() {
 
 func main() {
 	start := time.Now()
-	n := 10
+	n := 100
 
 	for i := 0; i < n; i++ {
 		ping()

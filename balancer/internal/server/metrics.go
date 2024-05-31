@@ -45,13 +45,13 @@ func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 		}),
 		charts.WithDataZoomOpts(opts.DataZoom{
 			Type:       "inside",
-			Start:      50,
+			Start:      0,
 			End:        100,
 			XAxisIndex: []int{0},
 		}),
 		charts.WithDataZoomOpts(opts.DataZoom{
 			Type:       "slider",
-			Start:      50,
+			Start:      0,
 			End:        100,
 			XAxisIndex: []int{0},
 		}),
