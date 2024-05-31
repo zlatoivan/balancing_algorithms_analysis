@@ -7,7 +7,7 @@ type RoundRobin struct {
 	last  int
 }
 
-func (b RoundRobin) Balance() string {
+func (b *RoundRobin) Balance() string {
 	backend := b.hosts[b.last]
 	//fmt.Println(b.last, "  ", (b.last+1)%len(b.hosts))
 	//b.last = (b.last + 1) % len(b.hosts)
