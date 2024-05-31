@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -39,10 +38,6 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func floatToString(inputNum float64) string {
-	return strconv.FormatFloat(inputNum, 'f', 6, 64)
-}
-
 func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
 	//start := time.Now()
 	//n := s.matrixSize
@@ -52,8 +47,7 @@ func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
 	//sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
 	//fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
 
-	slp := 1
-	//time.
+	slp := 1.0
 	time.Sleep(time.Duration(slp) * time.Second)
-	fmt.Printf("sleep %s sec\n", green(strconv.Itoa(slp)))
+	fmt.Printf("sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
 }
