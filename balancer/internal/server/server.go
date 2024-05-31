@@ -21,7 +21,11 @@ type Server struct {
 
 func New(hosts []string) *Server {
 	server := Server{
-		balancer: &balancer.RoundRobin{Hosts: hosts, Last: 0},
+		balancer: &balancer.RoundRobin{
+			Hosts: hosts,
+			Last:  0,
+			Mx:    sync.RWMutex{},
+		},
 		//lastTimesAll: []float64{},
 		lastTimesBack: make(map[string][]float64),
 		avgTimeBack:   make(map[string]float64),

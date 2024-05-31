@@ -33,8 +33,9 @@ func ping() {
 
 func main() {
 	start := time.Now()
+	n := 10
 	wg := sync.WaitGroup{}
-	for i := 0; i < 10; i++ {
+	for i := 0; i < n; i++ {
 		wg.Add(1)
 		go func() {
 			ping()
@@ -43,6 +44,6 @@ func main() {
 	}
 	wg.Wait()
 	sec := time.Since(start).Seconds()
-	rps := 10 / sec
+	rps := float64(n) / sec
 	fmt.Printf("\nRPS = %.4f\n\n", rps)
 }
