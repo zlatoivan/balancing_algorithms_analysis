@@ -59,14 +59,13 @@ func (s *Server) ping(backend string, w http.ResponseWriter) string {
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
+	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
+	fmt.Printf(ans)
 
 	_, err = w.Write([]byte(ans))
 	if err != nil {
 		fmt.Printf("w.Write: %v\n", err)
 	}
-
-	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
-	fmt.Printf(ans)
 
 	return ans
 }
@@ -74,7 +73,7 @@ func (s *Server) ping(backend string, w http.ResponseWriter) string {
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 	backend := s.balancer.Balance()
-	go s.ping(backend, w)
+	s.ping(backend, w)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
