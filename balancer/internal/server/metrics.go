@@ -12,7 +12,7 @@ import (
 func (s *Server) genY(backend string) []opts.LineData {
 	y := make([]opts.LineData, 0)
 	tms := s.lastTimesBack[backend]
-	for val := range tms {
+	for _, val := range tms {
 		y = append(y, opts.LineData{Value: val})
 	}
 	return y
@@ -67,7 +67,6 @@ func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 		AddSeries("Back 1", s.genY("1.zlatoivan.ru")).
 		AddSeries("Back 2", s.genY("2.zlatoivan.ru")).
 		AddSeries("Back 3", s.genY("3.zlatoivan.ru")).
-
 		SetSeriesOptions(
 			charts.WithLineChartOpts(opts.LineChart{
 				Smooth:     true,
