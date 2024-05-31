@@ -11,7 +11,7 @@ type Config struct {
 	HttpPort     string  `yaml:"http_port" env-default:"9000"`
 	BalancerName string  `yaml:"balancer_name" env-default:"round_robin"`
 	MatrixSize   int     `yaml:"matrix_size" env-default:"150"`
-	TimeSleep    float64 `yaml:"time_sleep" env-default:"5"`
+	TimeSleep    float64 `yaml:"time_sleep"`
 }
 
 func New() (Config, error) {
