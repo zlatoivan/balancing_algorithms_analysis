@@ -18,7 +18,7 @@ func ping() {
 	}
 	defer resp.Body.Close()
 
-	ans := fmt.Sprintf("%d", resp.StatusCode)
+	ans := fmt.Sprintf("%d\n", resp.StatusCode)
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {

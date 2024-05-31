@@ -4,8 +4,8 @@ type Balancer interface {
 	Balance() string
 }
 
-func New(balancerName string, hosts []string) interface{} {
-	var newBalancer interface{}
+func New(balancerName string, hosts []string) Balancer {
+	var newBalancer Balancer
 	switch balancerName {
 	case "random":
 		newBalancer = Random{hosts: hosts}
