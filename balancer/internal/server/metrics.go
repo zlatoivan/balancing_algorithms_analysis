@@ -18,6 +18,18 @@ func (s *Server) genY(backend string) []opts.LineData {
 	return y
 }
 
+func (s *Server) genX() []string {
+	x := make([]string, 0)
+	n := 0
+	for _, v := range s.lastTimesBack {
+		n = max(n, len(v))
+	}
+	for i := 0; i < n; i++ {
+		x = append(x, strconv.Itoa(i))
+	}
+	return x
+}
+
 func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 	line := charts.NewLine()
 
@@ -57,11 +69,7 @@ func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 		}),
 	)
 
-	x := make([]string, 0)
-	for i := 0; i < 10; i++ {
-		x = append(x, strconv.Itoa(i))
-	}
-	//x := genXTrigonometry()
+	x := s.genX()
 
 	line.SetXAxis(x).
 		AddSeries("Back 1", s.genY("1.zlatoivan.ru")).
