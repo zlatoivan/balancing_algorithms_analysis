@@ -46,8 +46,16 @@ func (s *Server) ping(backend string) string {
 	secStr := fmt.Sprintf("%.4f", sec)
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
-	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec", green(backend), green(secStr), green(status), blue(avg))
-	fmt.Println(ans)
+	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
+	t := ""
+	for back, times := range s.lastTimesBack {
+		tms := ""
+		for _, tt := range times {
+			tms += fmt.Sprintf("%.4f", tt)
+		}
+		t += fmt.Sprintf("back %s | avg %.4f | times %v", back, s.avgTimeBack[back], tms)
+	}
+	fmt.Printf(ans)
 	return ans
 }
 

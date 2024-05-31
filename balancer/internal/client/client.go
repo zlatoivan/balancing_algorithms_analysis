@@ -26,7 +26,7 @@ func ping() {
 		}
 		ans = string(bodyBytes)
 	}
-	fmt.Printf("%s\n", ans)
+	fmt.Printf("%s", ans)
 
 	//fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
 }
