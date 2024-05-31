@@ -45,13 +45,12 @@ func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
 	slp := (math.Sin(s.timeSleep) + 1) * 3
 	time.Sleep(time.Duration(slp) * time.Second)
 	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
-	s.timeSleep += +math.Pi / 8
-	s.mx.Unlock()
-
+	s.timeSleep += math.Pi / 8
 	_, err := w.Write([]byte(fmt.Sprintf("%.4f", slp)))
 	if err != nil {
 		fmt.Printf("w.Write: %v\n", err)
 	}
+	s.mx.Unlock()
 }
 
 //func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
