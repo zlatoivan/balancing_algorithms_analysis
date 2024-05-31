@@ -11,7 +11,7 @@ type RoundRobin struct {
 	Mx    sync.RWMutex
 }
 
-func (b *RoundRobin) Balance() string {
+func (b *RoundRobin) ChooseBackend() string {
 	b.Mx.RLock()
 	backend := b.Hosts[b.Last]
 	b.Mx.RUnlock()

@@ -1,7 +1,7 @@
 package balancer
 
 //type Balancer interface {
-//	Balance() string
+//	ChooseBackend() string
 //}
 //
 //func New(balancerName string, Hosts []string) *Balancer {
