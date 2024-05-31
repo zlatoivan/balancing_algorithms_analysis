@@ -74,7 +74,7 @@ func (s *Server) ping(w http.ResponseWriter) string {
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
-	go s.ping(w)
+	s.ping(w)
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
