@@ -12,13 +12,9 @@ type RoundRobin struct {
 }
 
 func (b *RoundRobin) ChooseBackend() string {
-	b.Mx.RLock()
-	backend := b.Hosts[b.Last]
-	b.Mx.RUnlock()
-
-	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.Hosts))
-
 	b.Mx.Lock()
+	backend := b.Hosts[b.Last]
+	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.Hosts))
 	b.Last = (b.Last + 1) % len(b.Hosts)
 	b.Mx.Unlock()
 
