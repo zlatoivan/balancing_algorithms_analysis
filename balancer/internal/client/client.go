@@ -35,10 +35,6 @@ func main() {
 	start := time.Now()
 	n := 10
 
-	//for i := 0; i < n; i++ {
-	//	ping()
-	//}
-
 	wg := sync.WaitGroup{}
 	for i := 0; i < n; i++ {
 		wg.Add(1)
@@ -46,7 +42,6 @@ func main() {
 			ping()
 			wg.Done()
 		}()
-		//ping()
 	}
 	wg.Wait()
 

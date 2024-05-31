@@ -4,7 +4,7 @@ package balancer
 //	Balance() string
 //}
 //
-//func New(balancerName string, Hosts []string) Balancer {
+//func New(balancerName string, Hosts []string) *Balancer {
 //	var newBalancer Balancer
 //	switch balancerName {
 //	case "random":
@@ -14,9 +14,5 @@ package balancer
 //	case "weighted_round_robin":
 //		newBalancer = WeightedRoundRobin{Hosts: Hosts}
 //	}
-//	return newBalancer
+//	return &newBalancer
 //}
-
-func New() {
-
-}
