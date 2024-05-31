@@ -9,7 +9,6 @@ import (
 
 	"balancing_algorithms_analysis/internal/config"
 	"balancing_algorithms_analysis/internal/server"
-	"balancing_algorithms_analysis/internal/server/balancer"
 )
 
 func main() {
@@ -30,9 +29,9 @@ func bootstrap(ctx context.Context) error {
 		return fmt.Errorf("config.New: %w", err)
 	}
 
-	balancer1 := balancer.New(cfg.BalancerName, cfg.Hosts)
+	//balancer1 := balancer.New(cfg.BalancerName, cfg.Hosts)
 
-	server1 := server.New(balancer1)
+	server1 := server.New(cfg.Hosts)
 
 	server1.Run(ctx, cfg.HttpPort)
 	if err != nil {
