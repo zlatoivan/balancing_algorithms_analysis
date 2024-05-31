@@ -23,7 +23,7 @@ func blue(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
 }
 
-func (s *Server) ping(backend string) int {
+func (s *Server) ping(backend string) *http.Response {
 	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
@@ -47,7 +47,7 @@ func (s *Server) ping(backend string) int {
 	status := fmt.Sprintf("%d", resp.StatusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	fmt.Printf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
-	return resp.StatusCode
+	return resp
 }
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
