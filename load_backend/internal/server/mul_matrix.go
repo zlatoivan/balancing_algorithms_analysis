@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -38,16 +39,21 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
-	start := time.Now()
-	n := s.matrixSize
-	matrixA := genRandMatrix(n)
-	matrixB := genRandMatrix(n)
-	MultiplyMatrix(n, matrixA, matrixB)
-	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
-	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
+func floatToString(inputNum float64) string {
+	return strconv.FormatFloat(inputNum, 'f', 6, 64)
+}
 
-	//slp := 1
-	//time.Sleep(1 * time.Second)
-	//fmt.Printf("sleep %s sec", green(strconv.Itoa(slp)))
+func (s Server) MulMatrices(_ http.ResponseWriter, _ *http.Request) {
+	//start := time.Now()
+	//n := s.matrixSize
+	//matrixA := genRandMatrix(n)
+	//matrixB := genRandMatrix(n)
+	//MultiplyMatrix(n, matrixA, matrixB)
+	//sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
+	//fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
+
+	slp := 1
+	//time.
+	time.Sleep(time.Duration(slp) * time.Second)
+	fmt.Printf("sleep %s sec\n", green(strconv.Itoa(slp)))
 }
