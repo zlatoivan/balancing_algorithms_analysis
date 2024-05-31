@@ -4,12 +4,14 @@ import "fmt"
 
 type RoundRobin struct {
 	hosts []string
-	Last  int
+	last  int
 }
 
 func (b RoundRobin) Balance() string {
-	backend := b.hosts[b.Last]
-	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.hosts))
-	b.Last = (b.Last + 1) % len(b.hosts)
+	backend := b.hosts[b.last]
+	//fmt.Println(b.last, "  ", (b.last+1)%len(b.hosts))
+	//b.last = (b.last + 1) % len(b.hosts)
+	b.last++
+	fmt.Println("last =", b.last)
 	return backend
 }
