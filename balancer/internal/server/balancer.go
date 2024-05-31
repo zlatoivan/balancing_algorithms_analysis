@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"sync"
 )
 
 func mean(data []float64) float64 {
@@ -100,13 +99,15 @@ func (s *Server) ping(w http.ResponseWriter) string {
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	go func() {
-		s.ping(w)
-		wg.Done()
-	}()
-	wg.Wait()
+	s.ping(w)
+
+	//wg := sync.WaitGroup{}
+	//wg.Add(1)
+	//go func() {
+	//	s.ping(w)
+	//	wg.Done()
+	//}()
+	//wg.Wait()
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
