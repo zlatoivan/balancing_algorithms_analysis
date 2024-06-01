@@ -43,11 +43,7 @@ func reqAndGetSec(backend string) (int, float64) {
 		}
 		body = string(bodyBytes)
 	}
-	sec, err := strconv.ParseFloat(body, 64)
-	fmt.Printf("body = |%s|, sec = |%.4f|", body, sec)
-	if err == nil {
-		fmt.Printf("strconv.ParseFloat: %v", err)
-	}
+	sec, _ := strconv.ParseFloat(body, 64)
 
 	return resp.StatusCode, sec
 }
