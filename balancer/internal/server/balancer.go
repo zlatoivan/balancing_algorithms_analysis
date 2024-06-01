@@ -109,7 +109,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 			fmt.Printf("file.Close: %v", err)
 		}
 	}()
-	if _, err = f.WriteString(logs); err != nil {
+	if _, err = f.WriteString(logsCB); err != nil {
 		panic(err)
 	}
 

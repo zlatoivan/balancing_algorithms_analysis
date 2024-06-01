@@ -11,7 +11,7 @@ import (
 )
 
 type Server struct {
-	balancer      *balancer.RoundRobin
+	balancer      balancer.RoundRobin
 	lastTimesBack map[string][]float64
 	avgTimeBack   map[string]float64
 	lastTimesAll  []float64
@@ -21,7 +21,7 @@ type Server struct {
 
 func New(hosts []string) *Server {
 	server := Server{
-		balancer: &balancer.RoundRobin{
+		balancer: balancer.RoundRobin{
 			Hosts: hosts,
 			Last:  0,
 		},
