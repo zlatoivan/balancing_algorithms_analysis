@@ -50,7 +50,7 @@ func (s *Server) update(backend string, sec float64) {
 	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 	fmt.Println("add to main:", sec)
 	// Во все остальные копируем последнее время
-	for k := range s.lastTimesBackGr {
+	for _, k := range s.balancer.Hosts {
 		if k != backend {
 			if len(s.lastTimesBackGr[k]) > 0 {
 				s.lastTimesBackGr[k] = append(s.lastTimesBackGr[k], s.lastTimesBackGr[k][len(s.lastTimesBackGr[k])-1])
