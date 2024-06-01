@@ -58,9 +58,9 @@ func (s *Server) update(backend string, sec float64) {
 			//fmt.Println("add to second:", s.lastTimesBackGr[k][len(s.lastTimesBackGr[k])-1])
 		}
 	}
-	for k, v := range s.lastTimesBackGr {
-		fmt.Println(k, v)
-	}
+	//for k, v := range s.lastTimesBackGr {
+	//	fmt.Println(k, v)
+	//}
 
 	// Back
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
