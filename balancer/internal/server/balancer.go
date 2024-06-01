@@ -45,7 +45,7 @@ func reqAndGetSec(backend string) (int, float64) {
 }
 
 func (s *Server) update(backend string, sec float64) {
-	s.mx.Lock()
+	//s.mx.Lock()
 	// В тот кладет новое время
 	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 	// Во все остальные копируем последнее время
@@ -62,7 +62,7 @@ func (s *Server) update(backend string, sec float64) {
 	// All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
 	s.avgTimeAll = mean(s.lastTimesAll)
-	s.mx.Unlock()
+	//s.mx.Unlock()
 }
 
 func getColorOfBack(b string) int {
@@ -137,9 +137,11 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 func (s *Server) ping(w http.ResponseWriter) string {
 	backend := s.balancer.ChooseBackend()
 
+	s.mx.Lock()
 	statusCode, sec := reqAndGetSec(backend)
 
 	s.update(backend, sec)
+	s.mx.Unlock()
 
 	ans := s.getLog(sec, statusCode, backend)
 
