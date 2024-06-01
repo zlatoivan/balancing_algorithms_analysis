@@ -58,11 +58,7 @@ func (s *Server) update(backend string, sec float64) {
 
 	// All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
-	avgs := make([]float64, 0, len(s.avgTimeBack))
-	for _, val := range s.avgTimeBack {
-		avgs = append(avgs, val)
-	}
-	s.avgTimeAll = mean(avgs)
+	s.avgTimeAll = mean(s.lastTimesAll)
 	s.mx.Unlock()
 }
 

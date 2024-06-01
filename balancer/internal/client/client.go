@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -33,21 +32,21 @@ func ping() {
 
 func main() {
 	start := time.Now()
-	n := 40
+	n := 10
 
-	//for i := 0; i < n; i++ {
-	//	ping()
-	//}
-
-	wg := sync.WaitGroup{}
 	for i := 0; i < n; i++ {
-		wg.Add(1)
-		go func() {
-			ping()
-			wg.Done()
-		}()
+		ping()
 	}
-	wg.Wait()
+
+	//wg := sync.WaitGroup{}
+	//for i := 0; i < n; i++ {
+	//	wg.Add(1)
+	//	go func() {
+	//		ping()
+	//		wg.Done()
+	//	}()
+	//}
+	//wg.Wait()
 
 	sec := time.Since(start).Seconds()
 	rps := float64(n) / sec
