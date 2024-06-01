@@ -70,6 +70,7 @@ func getColorOfBack(b string) int {
 	case "3.zlatoivan.ru":
 		return 93 // yellow
 	}
+	return 0
 }
 
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {
