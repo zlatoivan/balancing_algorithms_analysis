@@ -12,7 +12,7 @@ import (
 
 type Server struct {
 	//balancer      balancer.Random
-	balancer balancer.Balancer
+	balancer balancer.RoundRobin
 	//balancer      balancer.WeightedRoundRobin
 	lastTimesBack map[string][]float64
 	avgTimeBack   map[string]float64
