@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"sync"
@@ -10,26 +9,26 @@ import (
 )
 
 func ping() {
-	//start := time.Now()
+	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://zlatoivan.ru/balancer")
 	//resp, err := client.Get("http://localhost:7070/balancer")
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	defer resp.Body.Close()
+	//defer resp.Body.Close()
+	//
+	//ans := fmt.Sprintf("%d\n", resp.StatusCode)
+	//if resp.StatusCode == http.StatusOK {
+	//	bodyBytes, err := io.ReadAll(resp.Body)
+	//	if err != nil {
+	//		log.Printf("io.ReadAll: %v\n", err)
+	//	}
+	//	ans = string(bodyBytes)
+	//}
+	//fmt.Printf("%s", ans)
 
-	ans := fmt.Sprintf("%d\n", resp.StatusCode)
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Printf("io.ReadAll: %v\n", err)
-		}
-		ans = string(bodyBytes)
-	}
-	fmt.Printf("%s", ans)
-
-	//fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
+	fmt.Printf("took %.4f seconds. Status code = %d\n", time.Since(start).Seconds(), resp.StatusCode)
 }
 
 func main() {
