@@ -10,12 +10,13 @@ type RoundRobin struct {
 	mx    sync.Mutex
 }
 
-func (b *RoundRobin) ChooseBackend() string {
+func (b *RoundRobin) ChooseBackend(_ map[string]float64) string {
 	b.mx.Lock()
+	defer b.mx.Unlock()
+
 	backend := b.Hosts[b.Last]
 	//fmt.Println(b.Last)
 	b.Last = (b.Last + 1) % len(b.Hosts)
-	b.mx.Unlock()
 
 	return backend
 }

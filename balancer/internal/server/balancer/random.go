@@ -8,6 +8,6 @@ type Random struct {
 	Hosts []string
 }
 
-func (b *Random) ChooseBackend() string {
+func (b *Random) ChooseBackend(_ map[string]float64) string {
 	return b.Hosts[rand.IntN(3)]
 }
