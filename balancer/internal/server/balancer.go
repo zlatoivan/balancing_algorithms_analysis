@@ -48,6 +48,7 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	// В тот кладет новое время
 	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
+	fmt.Println("add to main:", sec)
 	// Во все остальные копируем последнее время
 	for k := range s.lastTimesBackGr {
 		if k != backend {
@@ -56,6 +57,7 @@ func (s *Server) update(backend string, sec float64) {
 			} else {
 				s.lastTimesBackGr[k] = append(s.lastTimesBackGr[k], 0)
 			}
+			fmt.Println("add to second:", s.lastTimesBackGr[k][len(s.lastTimesBackGr[k])-1])
 		}
 	}
 
