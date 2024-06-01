@@ -96,10 +96,10 @@ func (s *Server) ping(w http.ResponseWriter) string {
 	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
 	fmt.Printf(ans)
 
-	_, err := w.Write([]byte(ans))
-	if err != nil {
-		fmt.Printf("w.Write: %v\n", err)
-	}
+	//_, err := w.Write([]byte(ans))
+	//if err != nil {
+	//	fmt.Printf("w.Write: %v\n", err)
+	//}
 
 	return ans
 }
