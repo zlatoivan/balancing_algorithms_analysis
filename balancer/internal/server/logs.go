@@ -19,7 +19,6 @@ func Logs(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	data, err := io.ReadAll(file)
-	fmt.Print(data)
 
 	_, err = w.Write(data)
 	if err != nil {
