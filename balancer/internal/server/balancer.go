@@ -89,7 +89,18 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
 	logs += fmt.Sprintf("avgΣ %s\n\n", color(avg, 96))
 
-	data := []byte(logs)
+	// Черно белые логи для /logs
+	logsCB := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", backend, secStr, status, avg)
+
+	for i, b := range s.balancer.Hosts {
+		c = getColorOfBack(b)
+		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
+		logsCB += fmt.Sprintf("avg%d %s\n", i+1, avg)
+	}
+	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
+	logs += fmt.Sprintf("avgΣ %s\n\n", avg)
+
+	data := []byte(logsCB)
 	err := os.WriteFile("logs.txt", data, 0644)
 	if err != nil {
 		fmt.Printf("os.WriteFile: %v", err)
