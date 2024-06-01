@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -62,17 +61,26 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Unlock()
 }
 
+func getColorOfBack(b string) int {
+	switch b {
+	case "1.zlatoivan.ru":
+		return 92 // green
+	case "2.zlatoivan.ru":
+		return 91 // red
+	case "3.zlatoivan.ru":
+		return 93 // yellow
+	}
+}
+
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	secStr := fmt.Sprintf("%.4f", sec)
 	status := fmt.Sprintf("%d", statusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
-	t, _ := strconv.Atoi(string(backend[0]))
-	c := 90 + t
+	c := getColorOfBack(backend)
 	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", color(backend, c), color(secStr, c), color(status, c), color(avg, 96))
 
 	for _, b := range s.balancer.Hosts {
-		t, _ = strconv.Atoi(string(b[0]))
-		c = 90 + t
+		c = getColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
 		ans += fmt.Sprintf("avg %s\n", color(avg, c))
 	}
