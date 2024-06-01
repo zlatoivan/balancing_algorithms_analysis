@@ -47,7 +47,8 @@ func reqAndGetSec(backend string) (int, float64) {
 func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	// В тот кладет новое время
-	if len(s.lastTimesBackGr[backend]) == 0 {
+	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
+	if len(s.lastTimesBackGr[backend]) == 1 {
 		m := 0
 		for _, v := range s.lastTimesBackGr {
 			m = max(m, len(v))
@@ -55,8 +56,6 @@ func (s *Server) update(backend string, sec float64) {
 		for i := 0; i < m; i++ {
 			s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 		}
-	} else {
-		s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 	}
 	fmt.Println("add to main:", sec)
 	// Во все остальные копируем последнее время
