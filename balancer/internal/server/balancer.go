@@ -5,21 +5,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"time"
+
+	"balancing_algorithms_analysis/internal/server/utils"
 )
-
-func mean(data []float64) float64 {
-	var sum float64
-	for _, d := range data {
-		sum += d
-	}
-	return sum / float64(len(data))
-}
-
-func Color(s string, c int) string {
-	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", c, s)
-}
 
 func reqAndGetSec(backend string) (int, float64) {
 	start := time.Now()
@@ -75,11 +64,11 @@ func (s *Server) update(backend string, sec float64) {
 
 	// Back
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
-	s.avgTimeBack[backend] = mean(s.lastTimesBack[backend])
+	s.avgTimeBack[backend] = utils.Mean(s.lastTimesBack[backend])
 
 	// All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
-	s.avgTimeAll = mean(s.lastTimesAll)
+	s.avgTimeAll = utils.Mean(s.lastTimesAll)
 }
 
 func GetColorOfBack(b string) int {
@@ -94,35 +83,20 @@ func GetColorOfBack(b string) int {
 	return 0
 }
 
-func ToLogs(logsCB string) {
-	file, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-	if err != nil {
-		log.Printf("os.OpenFile: %v", err)
-	}
-	defer func() {
-		if err = file.Close(); err != nil {
-			fmt.Printf("file.Close: %v", err)
-		}
-	}()
-	if _, err = file.WriteString(logsCB); err != nil {
-		fmt.Printf("file.WriteString: %v", err)
-	}
-}
-
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	secStr := fmt.Sprintf("%.4f", sec)
 	status := fmt.Sprintf("%d", statusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	c := GetColorOfBack(backend)
-	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", Color(backend, c), Color(secStr, c), Color(status, c), Color(avg, 96))
+	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", utils.Color(backend, c), utils.Color(secStr, c), utils.Color(status, c), utils.Color(avg, 96))
 
 	for i, b := range s.balancer.Hosts {
 		c = GetColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
-		logs += fmt.Sprintf("avg%d %s\n", i+1, Color(avg, c))
+		logs += fmt.Sprintf("avg%d %s\n", i+1, utils.Color(avg, c))
 	}
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	logs += fmt.Sprintf("avgΣ %s\n\n", Color(avg, 96))
+	logs += fmt.Sprintf("avgΣ %s\n\n", utils.Color(avg, 96))
 
 	// Черно белые логи для /logs
 	logsCB := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", backend, secStr, status, avg)
@@ -135,7 +109,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
 	logsCB += fmt.Sprintf("avgΣ %s\n\n", avg)
 
-	ToLogs(logsCB)
+	utils.ToLogs(logsCB)
 
 	//data := []byte(logsCB)
 	//err := os.WriteFile("logs.txt", data, 0644)

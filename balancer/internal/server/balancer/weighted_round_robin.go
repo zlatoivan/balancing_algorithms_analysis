@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"balancing_algorithms_analysis/internal/server"
+	"balancing_algorithms_analysis/internal/server/utils"
 )
 
 type WeightedRoundRobin struct {
@@ -61,7 +62,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 		for i, bc := range b.Hosts {
 			color := server.GetColorOfBack(bc)
 			weight := fmt.Sprintf("%d", weights[bc])
-			logs += fmt.Sprintf("\tw%d %s\n", i+1, server.Color(weight, color))
+			logs += fmt.Sprintf("\tw%d %s\n", i+1, utils.Color(weight, color))
 		}
 		logs += "\n"
 		fmt.Printf(logs)
@@ -71,7 +72,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 			logsCB += fmt.Sprintf("\tw%d %d\n", i+1, weights[bc])
 		}
 		logsCB += "\n"
-		server.ToLogs(logsCB)
+		utils.ToLogs(logsCB)
 	}
 
 	backend := b.Order[b.ReqCurNum]
