@@ -100,11 +100,24 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
 	logsCB += fmt.Sprintf("avgΣ %s\n\n", avg)
 
-	data := []byte(logsCB)
-	err := os.WriteFile("logs.txt", data, 0644)
+	f, err := os.OpenFile("logs.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
-		fmt.Printf("os.WriteFile: %v", err)
+		panic(err)
 	}
+	defer func() {
+		if err = f.Close(); err != nil {
+			fmt.Printf("file.Close: %v", err)
+		}
+	}()
+	if _, err = f.WriteString(logsCB); err != nil {
+		panic(err)
+	}
+
+	//data := []byte(logsCB)
+	//err := os.WriteFile("logs.txt", data, 0644)
+	//if err != nil {
+	//	fmt.Printf("os.WriteFile: %v", err)
+	//}
 
 	//allTms := ""
 	//for back, times := range s.lastTimesBack {
