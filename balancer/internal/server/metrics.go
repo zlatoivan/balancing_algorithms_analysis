@@ -20,7 +20,7 @@ func genY(tms []float64) []opts.LineData {
 func (s *Server) genX() []string {
 	x := make([]string, 0)
 	n := 0
-	for _, v := range s.lastTimesBack {
+	for _, v := range s.lastTimesBackGr {
 		n = max(n, len(v))
 	}
 	for i := 0; i < n; i++ {
