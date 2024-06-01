@@ -71,8 +71,8 @@ func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 	x := s.genX()
 
 	line.SetXAxis(x).
-		AddSeries("Back 1", genY(s.lastTimesBack["1.zlatoivan.ru"])).
-		AddSeries("Back 2", genY(s.lastTimesBack["2.zlatoivan.ru"])).
+		AddSeries("Back 1", genY(s.lastTimesBackGr["1.zlatoivan.ru"])).
+		AddSeries("Back 2", genY(s.lastTimesBackGr["2.zlatoivan.ru"])).
 		AddSeries("Balancer", genY(s.lastTimesAll)).
 		//AddSeries("Back 3", s.genY("3.zlatoivan.ru")).
 		SetSeriesOptions(
