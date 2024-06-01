@@ -30,6 +30,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 			}
 			b.Order = make([]string, len(b.Hosts))
 			copy(b.Order, b.Hosts)
+			fmt.Println("ORDER =", b.Order)
 		} else {
 			m := 0.0
 			for _, v := range avgs {
