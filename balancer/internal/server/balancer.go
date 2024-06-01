@@ -98,7 +98,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 		logsCB += fmt.Sprintf("avg%d %s\n", i+1, avg)
 	}
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	logs += fmt.Sprintf("avgΣ %s\n\n", avg)
+	logsCB += fmt.Sprintf("avgΣ %s\n\n", avg)
 
 	data := []byte(logsCB)
 	err := os.WriteFile("logs.txt", data, 0644)
