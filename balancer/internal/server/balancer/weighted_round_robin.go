@@ -6,7 +6,6 @@ import (
 	"sort"
 	"sync"
 
-	"balancing_algorithms_analysis/internal/server"
 	"balancing_algorithms_analysis/internal/server/utils"
 )
 
@@ -60,7 +59,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 
 		logs := "\tNew weights!\n"
 		for i, bc := range b.Hosts {
-			color := server.GetColorOfBack(bc)
+			color := utils.GetColorOfBack(bc)
 			weight := fmt.Sprintf("%d", weights[bc])
 			logs += fmt.Sprintf("\tw%d %s\n", i+1, utils.Color(weight, color))
 		}

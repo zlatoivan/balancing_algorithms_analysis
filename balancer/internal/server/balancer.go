@@ -71,27 +71,15 @@ func (s *Server) update(backend string, sec float64) {
 	s.avgTimeAll = utils.Mean(s.lastTimesAll)
 }
 
-func GetColorOfBack(b string) int {
-	switch b {
-	case "1.zlatoivan.ru":
-		return 92 // green
-	case "2.zlatoivan.ru":
-		return 91 // red
-	case "3.zlatoivan.ru":
-		return 93 // yellow
-	}
-	return 0
-}
-
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	secStr := fmt.Sprintf("%.4f", sec)
 	status := fmt.Sprintf("%d", statusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
-	c := GetColorOfBack(backend)
+	c := utils.GetColorOfBack(backend)
 	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", utils.Color(backend, c), utils.Color(secStr, c), utils.Color(status, c), utils.Color(avg, 96))
 
 	for i, b := range s.balancer.Hosts {
-		c = GetColorOfBack(b)
+		c = utils.GetColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
 		logs += fmt.Sprintf("avg%d %s\n", i+1, utils.Color(avg, c))
 	}
@@ -102,7 +90,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	logsCB := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", backend, secStr, status, avg)
 
 	for i, b := range s.balancer.Hosts {
-		c = GetColorOfBack(b)
+		c = utils.GetColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
 		logsCB += fmt.Sprintf("avg%d %s\n", i+1, avg)
 	}
