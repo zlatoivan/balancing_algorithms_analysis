@@ -5,5 +5,5 @@ hosts: [
   #  'localhost:7073'
 ]
 balancer_name:
-  #  random
-  round_robin
+    random
+#  round_robin
