@@ -35,7 +35,6 @@ func reqAndGetSec(backend string) (int, float64) {
 
 func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
-	defer s.mx.Unlock()
 
 	// В тот кладет новое время
 	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
@@ -69,6 +68,8 @@ func (s *Server) update(backend string, sec float64) {
 	// All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
 	s.avgTimeAll = utils.Mean(s.lastTimesAll)
+
+	s.mx.Unlock()
 }
 
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {
