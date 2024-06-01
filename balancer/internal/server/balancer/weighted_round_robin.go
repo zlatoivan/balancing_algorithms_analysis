@@ -58,6 +58,8 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 					b.Order = append(b.Order, back)
 				}
 			}
+
+			b.ReqCurNum = 0
 		}
 
 		logs := "\tNew weights!\n"
