@@ -9,9 +9,8 @@ import (
 	"github.com/go-echarts/go-echarts/v2/opts"
 )
 
-func (s *Server) genY(backend string) []opts.LineData {
+func genY(tms []float64) []opts.LineData {
 	y := make([]opts.LineData, 0)
-	tms := s.lastTimesBack[backend]
 	for _, val := range tms {
 		y = append(y, opts.LineData{Value: val})
 	}
@@ -72,14 +71,15 @@ func (s *Server) Metrics(w http.ResponseWriter, _ *http.Request) {
 	x := s.genX()
 
 	line.SetXAxis(x).
-		AddSeries("Back 1", s.genY("1.zlatoivan.ru")).
-		AddSeries("Back 2", s.genY("2.zlatoivan.ru")).
-		AddSeries("Back 3", s.genY("3.zlatoivan.ru")).
+		AddSeries("Back 1", genY(s.lastTimesBack["1.zlatoivan.ru"])).
+		AddSeries("Back 2", genY(s.lastTimesBack["2.zlatoivan.ru"])).
+		AddSeries("Balancer", genY(s.lastTimesAll)).
+		//AddSeries("Back 3", s.genY("3.zlatoivan.ru")).
 		SetSeriesOptions(
 			charts.WithLineChartOpts(opts.LineChart{
-				Smooth:     true,
-				ShowSymbol: true,
-				SymbolSize: 4,
+				//Smooth:     true,
+				//ShowSymbol: true,
+				//SymbolSize: 4,
 			}),
 			charts.WithMarkLineNameTypeItemOpts(opts.MarkLineNameTypeItem{
 				Name: "Average",
