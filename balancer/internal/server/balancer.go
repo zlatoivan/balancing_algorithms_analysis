@@ -3,9 +3,10 @@ package server
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
-	"time"
+	"strconv"
 )
 
 func mean(data []float64) float64 {
@@ -25,28 +26,28 @@ func blue(s string) string {
 }
 
 func reqAndGetSec(backend string) (int, float64) {
-	start := time.Now()
+	//start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	sec := time.Since(start).Seconds()
+	//sec := time.Since(start).Seconds()
 
-	//defer resp.Body.Close()
-	//body := fmt.Sprintf("%d\n", resp.StatusCode)
-	//if resp.StatusCode == http.StatusOK {
-	//	bodyBytes, err := io.ReadAll(resp.Body)
-	//	if err != nil {
-	//		log.Printf("io.ReadAll: %v\n", err)
-	//	}
-	//	body = string(bodyBytes)
-	//}
-	//fmt.Printf("body = |%s|", body)
-	//sec, err := strconv.ParseFloat(body, 64)
-	//if err == nil {
-	//	fmt.Printf("strconv.ParseFloat: %v", err)
-	//}
+	defer resp.Body.Close()
+	body := fmt.Sprintf("%d\n", resp.StatusCode)
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Printf("io.ReadAll: %v\n", err)
+		}
+		body = string(bodyBytes)
+	}
+	sec, err := strconv.ParseFloat(body, 64)
+	fmt.Printf("body = |%s|, sec = |%.4f|", body, sec)
+	if err == nil {
+		fmt.Printf("strconv.ParseFloat: %v", err)
+	}
 
 	return resp.StatusCode, sec
 }
