@@ -53,9 +53,9 @@ func reqAndGetSec(backend string) (int, float64) {
 func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
-	for k, v := range s.lastTimesBack {
+	for k := range s.lastTimesBack {
 		if k != backend {
-			v = append(v, v[len(v)-1])
+			s.lastTimesBack[k] = append(s.lastTimesBack[k], s.lastTimesBack[k][len(s.lastTimesBack[k])-1])
 		}
 	}
 	s.avgTimeBack[backend] = mean(s.lastTimesBack[backend])
