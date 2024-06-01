@@ -78,10 +78,10 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 		t, _ = strconv.Atoi(string(b[0]))
 		c = 90 + t
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
-		ans += fmt.Sprintf("back %s   | avg %s\n", color(string(b[0]), c), color(avg, c))
+		ans += fmt.Sprintf("avg %s\n", color(avg, c))
 	}
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	ans += fmt.Sprintf("%s | avg %s\n\n", color("balancer", 96), color(avg, 96))
+	ans += fmt.Sprintf("avg %s\n\n", color(avg, 96))
 
 	//allTms := ""
 	//for back, times := range s.lastTimesBack {

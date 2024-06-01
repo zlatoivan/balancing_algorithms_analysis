@@ -1,7 +1,6 @@
 package balancer
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -14,7 +13,7 @@ type RoundRobin struct {
 func (b *RoundRobin) ChooseBackend() string {
 	b.mx.Lock()
 	backend := b.Hosts[b.Last]
-	fmt.Println(b.Last, "  ", (b.Last+1)%len(b.Hosts))
+	//fmt.Println(b.Last)
 	b.Last = (b.Last + 1) % len(b.Hosts)
 	b.mx.Unlock()
 
