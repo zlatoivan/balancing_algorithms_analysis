@@ -39,7 +39,17 @@ func green(s string) string {
 	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
 }
 
-func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
+func (s *Server) DurationMatrix(_ http.ResponseWriter, _ *http.Request) {
+	start := time.Now()
+	n := s.matrixSize
+	matrixA := genRandMatrix(n)
+	matrixB := genRandMatrix(n)
+	MultiplyMatrix(n, matrixA, matrixB)
+	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
+	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
+}
+
+func (s *Server) DurationSinus(w http.ResponseWriter, _ *http.Request) {
 	//slp := s.timeSleep
 	s.mx.Lock()
 	slp := (math.Sin(s.timeSleep) + 1) * 3
@@ -56,12 +66,14 @@ func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
 	s.mx.Unlock()
 }
 
-//func (s Server) Duration(_ http.ResponseWriter, _ *http.Request) {
-//	start := time.Now()
-//	n := s.matrixSize
-//	matrixA := genRandMatrix(n)
-//	matrixB := genRandMatrix(n)
-//	MultiplyMatrix(n, matrixA, matrixB)
-//	sec := fmt.Sprintf("%.4f", time.Since(start).Seconds())
-//	fmt.Printf("Multiply matrices took %s seconds\n", green(sec))
-//}
+func (s *Server) DurationStatic(w http.ResponseWriter, _ *http.Request) {
+	s.mx.Lock()
+	slp := s.timeSleep
+	time.Sleep(time.Duration(int64(slp*1000)) * time.Millisecond)
+	fmt.Printf("Sleep %s sec\n", green(fmt.Sprintf("%.4f", slp)))
+	_, err := w.Write([]byte(fmt.Sprintf("%.4f", slp)))
+	if err != nil {
+		fmt.Printf("w.Write: %v\n", err)
+	}
+	s.mx.Unlock()
+}

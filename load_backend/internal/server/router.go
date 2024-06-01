@@ -13,7 +13,9 @@ func (s *Server) createRouter() *chi.Mux {
 		//middleware.Logger,
 	)
 
-	r.Get("/", s.Duration)
+	r.Get("/", s.DurationStatic)
+	//r.Get("/", s.DurationSinus)
+	//r.Get("/", s.DurationMatrix)
 
 	return r
 }

@@ -3,10 +3,10 @@ package server
 import (
 	"fmt"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func mean(data []float64) float64 {
@@ -17,46 +17,46 @@ func mean(data []float64) float64 {
 	return sum / float64(len(data))
 }
 
-func green(s string) string {
-	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 92, s)
-}
-
-func blue(s string) string {
-	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", 96, s)
+func color(s string, c int) string {
+	return fmt.Sprintf("\x1b[%dm%s\x1b[0m", c, s)
 }
 
 func reqAndGetSec(backend string) (int, float64) {
-	//start := time.Now()
+	start := time.Now()
 	client := http.Client{}
 	resp, err := client.Get("https://" + backend)
 	if err != nil {
 		log.Printf("client.Get: %v", err)
 	}
-	//sec := time.Since(start).Seconds()
+	sec := time.Since(start).Seconds()
 
-	defer resp.Body.Close()
-	body := fmt.Sprintf("%d\n", resp.StatusCode)
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Printf("io.ReadAll: %v\n", err)
-		}
-		body = string(bodyBytes)
-	}
-	sec, _ := strconv.ParseFloat(body, 64)
+	//defer resp.Body.Close()
+	//body := fmt.Sprintf("%d\n", resp.StatusCode)
+	//if resp.StatusCode == http.StatusOK {
+	//	bodyBytes, err := io.ReadAll(resp.Body)
+	//	if err != nil {
+	//		log.Printf("io.ReadAll: %v\n", err)
+	//	}
+	//	body = string(bodyBytes)
+	//}
+	//sec, _ := strconv.ParseFloat(body, 64)
 
 	return resp.StatusCode, sec
 }
 
 func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
-	for k := range s.lastTimesBack {
-		if len(s.lastTimesBack[k]) > 0 && k != backend {
-			s.lastTimesBack[k] = append(s.lastTimesBack[k], s.lastTimesBack[k][len(s.lastTimesBack[k])-1])
-		}
-	}
+	//for k := range s.lastTimesBack {
+	//	if len(s.lastTimesBack[k]) > 0 && k != backend {
+	//		s.lastTimesBack[k] = append(s.lastTimesBack[k], s.lastTimesBack[k][len(s.lastTimesBack[k])-1])
+	//	}
+	//}
+
+	// Back
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
 	s.avgTimeBack[backend] = mean(s.lastTimesBack[backend])
+
+	// All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
 	avgs := make([]float64, 0, len(s.avgTimeBack))
 	for _, val := range s.avgTimeBack {
@@ -66,16 +66,31 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Unlock()
 }
 
-func getAllTimesStr(lastTimesBack map[string][]float64, avgTimeBack map[string]float64) string {
-	allTms := ""
-	for back, times := range lastTimesBack {
-		tms := ""
-		for _, tt := range times {
-			tms += fmt.Sprintf("%.4f ", tt)
-		}
-		allTms += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, avgTimeBack[back], tms)
+func (s *Server) getLog(sec float64, statusCode int, backend string) string {
+	secStr := fmt.Sprintf("%.4f", sec)
+	status := fmt.Sprintf("%d", statusCode)
+	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
+	t, _ := strconv.Atoi(string(backend[0]))
+	c := 90 + t
+	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", color(backend, c), color(secStr, c), color(status, c), color(avg, 96))
+
+	for _, b := range s.balancer.Hosts {
+		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
+		ans += fmt.Sprintf("back %s | avg %s\n", color(b, c), color(avg, c))
 	}
-	return allTms
+	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
+	ans += fmt.Sprintf("%s | avg %s\n", color("balancer", 96), color(avg, 96))
+
+	//allTms := ""
+	//for back, times := range s.lastTimesBack {
+	//	tms := ""
+	//	for _, tt := range times {
+	//		tms += fmt.Sprintf("%.4f ", tt)
+	//	}
+	//	allTms += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, s.avgTimeBack[back], tms)
+	//}
+
+	return ans
 }
 
 func (s *Server) ping(w http.ResponseWriter) string {
@@ -85,11 +100,8 @@ func (s *Server) ping(w http.ResponseWriter) string {
 
 	s.update(backend, sec)
 
-	secStr := fmt.Sprintf("%.4f", sec)
-	status := fmt.Sprintf("%d", statusCode)
-	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
-	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", green(backend), green(secStr), green(status), blue(avg))
-	ans += getAllTimesStr(s.lastTimesBack, s.avgTimeBack)
+	ans := s.getLog(sec, statusCode, backend)
+
 	fmt.Printf(ans)
 
 	//_, err := w.Write([]byte(ans))
