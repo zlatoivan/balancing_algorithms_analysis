@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -104,7 +105,14 @@ func (s *Server) ping(w http.ResponseWriter) string {
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
-	go s.ping(w)
+
+	s.ping(w)
+
+	t, _ := template.ParseFiles("static/template/index.html")
+	err := t.Execute(w, "")
+	if err != nil {
+		log.Printf("t.Execute: %v", err)
+	}
 
 	//wg := sync.WaitGroup{}
 	//wg.Add(1)
