@@ -5,9 +5,9 @@ import (
 )
 
 type Random struct {
-	hosts []string
+	Hosts []string
 }
 
-func (b Random) ChooseBackend() string {
-	return b.hosts[rand.IntN(3)]
+func (b *Random) ChooseBackend() string {
+	return b.Hosts[rand.IntN(3)]
 }

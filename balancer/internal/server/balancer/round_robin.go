@@ -10,7 +10,7 @@ type RoundRobin struct {
 	mx    sync.Mutex
 }
 
-func (b *RoundRobin) ChooseBackend() string {
+func (b RoundRobin) ChooseBackend() string {
 	b.mx.Lock()
 	backend := b.Hosts[b.Last]
 	//fmt.Println(b.Last)
