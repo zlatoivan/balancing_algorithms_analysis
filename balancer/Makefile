@@ -32,6 +32,8 @@ compose-down-local: ## down docker compose local
 
 .PHONY: run
 run: ## run local
+	rm -f logs.txt && \
+	touch logs.txt && \
 	CONFIG_PATH=config/config.local.yaml go run cmd/main.go
 
 .PHONY: run-test

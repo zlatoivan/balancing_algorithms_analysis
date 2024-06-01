@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -78,15 +79,21 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	status := fmt.Sprintf("%d", statusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	c := getColorOfBack(backend)
-	ans := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", color(backend, c), color(secStr, c), color(status, c), color(avg, 96))
+	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", color(backend, c), color(secStr, c), color(status, c), color(avg, 96))
 
 	for i, b := range s.balancer.Hosts {
 		c = getColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
-		ans += fmt.Sprintf("avg%d %s\n", i+1, color(avg, c))
+		logs += fmt.Sprintf("avg%d %s\n", i+1, color(avg, c))
 	}
 	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	ans += fmt.Sprintf("avgΣ %s\n\n", color(avg, 96))
+	logs += fmt.Sprintf("avgΣ %s\n\n", color(avg, 96))
+
+	data := []byte(logs)
+	err := os.WriteFile("logs.txt", data, 0644)
+	if err != nil {
+		fmt.Printf("os.WriteFile: %v", err)
+	}
 
 	//allTms := ""
 	//for back, times := range s.lastTimesBack {
@@ -97,7 +104,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	//	allTms += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, s.avgTimeBack[back], tms)
 	//}
 
-	return ans
+	return logs
 }
 
 func (s *Server) ping(w http.ResponseWriter) string {
