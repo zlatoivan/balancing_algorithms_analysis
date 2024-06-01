@@ -53,7 +53,7 @@ func (s *Server) update(backend string, sec float64) {
 		for _, v := range s.lastTimesBackGr {
 			m = max(m, len(v))
 		}
-		for i := 0; i < m-1; i++ {
+		for i := 0; i < m; i++ {
 			s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 		}
 	}
