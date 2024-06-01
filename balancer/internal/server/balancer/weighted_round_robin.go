@@ -25,8 +25,8 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 	if b.ReqCurNum == len(b.Order) {
 		weights := make(map[string]int)
 		if len(b.Order) == 0 {
-			for k := range avgs {
-				weights[k] = 1
+			for _, back := range b.Hosts {
+				weights[back] = 1
 			}
 			b.Order = make([]string, len(b.Hosts))
 			copy(b.Order, b.Hosts)
