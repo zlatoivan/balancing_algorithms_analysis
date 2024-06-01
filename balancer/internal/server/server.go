@@ -35,10 +35,11 @@ func New(hosts []string) *Server {
 		//	Hosts: hosts,
 		//	Last:  0,
 		//},
-		lastTimesAll:  make([]float64, 0),
-		lastTimesBack: make(map[string][]float64),
-		avgTimeBack:   make(map[string]float64),
-		avgTimeAll:    0,
+		lastTimesAll:    make([]float64, 0),
+		lastTimesBack:   make(map[string][]float64),
+		lastTimesBackGr: make(map[string][]float64),
+		avgTimeBack:     make(map[string]float64),
+		avgTimeAll:      0,
 	}
 	return &server
 }
