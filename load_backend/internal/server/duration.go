@@ -49,10 +49,10 @@ func (s *Server) Duration(w http.ResponseWriter, _ *http.Request) {
 	if s.timeSleep >= 2*math.Pi {
 		s.timeSleep -= 2 * math.Pi
 	}
-	_, err := w.Write([]byte(fmt.Sprintf("%.4f", slp)))
-	if err != nil {
-		fmt.Printf("w.Write: %v\n", err)
-	}
+	//_, err := w.Write([]byte(fmt.Sprintf("%.4f", slp)))
+	//if err != nil {
+	//	fmt.Printf("w.Write: %v\n", err)
+	//}
 	s.mx.Unlock()
 }
 
