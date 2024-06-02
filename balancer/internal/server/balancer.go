@@ -80,7 +80,6 @@ func (s *Server) update(backend string, sec float64) {
 		if m > 1 {
 			for i := 0; i < m; i++ {
 				s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
-				s.lastTimesBackGr["all"] = append(s.lastTimesBackGr["all"], sec)
 			}
 		}
 	}
@@ -89,7 +88,6 @@ func (s *Server) update(backend string, sec float64) {
 	for _, k := range s.balancer.Hosts {
 		if len(s.lastTimesBackGr[k]) > 0 && k != backend {
 			s.lastTimesBackGr[k] = append(s.lastTimesBackGr[k], s.lastTimesBackGr[k][len(s.lastTimesBackGr[k])-1])
-			s.lastTimesBackGr["all"] = append(s.lastTimesBackGr["all"], sec)
 			//fmt.Println("add to second:", s.lastTimesBackGr[k][len(s.lastTimesBackGr[k])-1])
 		}
 	}
