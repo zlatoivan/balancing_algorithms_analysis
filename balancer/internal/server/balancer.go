@@ -40,13 +40,13 @@ func (s *Server) update(backend string, sec float64) {
 	// для синуса
 	if s.balancer.ReqCurNum == 1 {
 		for back := range s.lastTimesBack {
-			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
+			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back] + 1
 			if from > 0 {
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
 				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
 			}
 		}
-		from := len(s.lastTimesAll) - len(s.balancer.Order)
+		from := len(s.lastTimesAll) - len(s.balancer.Order) + 1
 		if from > 0 {
 			s.lastTimesAll = s.lastTimesAll[from:]
 			s.avgTimeAll = utils.Mean(s.lastTimesAll)
