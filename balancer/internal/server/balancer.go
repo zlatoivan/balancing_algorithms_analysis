@@ -38,7 +38,7 @@ func (s *Server) update(backend string, sec float64) {
 	defer s.mx.Unlock()
 
 	// для синуса
-	if s.balancer.ReqCurNum == 0 {
+	if s.balancer.ReqCurNum == 1 {
 		for back := range s.lastTimesBack {
 			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
 			s.lastTimesBack[back] = s.lastTimesBack[back][from:]
