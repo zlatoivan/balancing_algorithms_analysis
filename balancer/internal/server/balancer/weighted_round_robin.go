@@ -14,6 +14,7 @@ type WeightedRoundRobin struct {
 	Order     []string
 	ReqCurNum int
 	mx        sync.Mutex
+	Weights   map[string]int
 }
 
 func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
@@ -23,10 +24,10 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 	//fmt.Println("len(b.Order) =", len(b.Order))
 	//fmt.Println("b.ReqCurNum =", b.ReqCurNum)
 	if b.ReqCurNum == len(b.Order) {
-		weights := make(map[string]int)
+		b.Weights = make(map[string]int)
 		if len(b.Order) == 0 {
 			for _, back := range b.Hosts {
-				weights[back] = 1
+				b.Weights[back] = 1
 			}
 			b.Order = make([]string, len(b.Hosts))
 			copy(b.Order, b.Hosts)
@@ -38,25 +39,25 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 			}
 			// Считаем веса для каждого бэкенда
 			for k, v := range avgs {
-				weights[k] = int(math.Round(m / v))
-				if weights[k] > len(b.Hosts)*2 { // !!! для синуса!
-					weights[k] = len(b.Hosts) * 2
+				b.Weights[k] = int(math.Round(m / v))
+				if b.Weights[k] > len(b.Hosts)*2 { // !!! для синуса!
+					b.Weights[k] = len(b.Hosts) * 2
 				}
 			}
 
 			// Сортируем и создаем последовательность вызовов
-			keys := make([]string, 0, len(weights))
-			for key := range weights {
+			keys := make([]string, 0, len(b.Weights))
+			for key := range b.Weights {
 				keys = append(keys, key)
 			}
 			comp := func(i, j int) bool {
-				return weights[keys[i]] > weights[keys[j]]
+				return b.Weights[keys[i]] > b.Weights[keys[j]]
 			}
 			sort.Slice(keys, comp)
 
 			b.Order = make([]string, 0)
 			for _, back := range keys {
-				weight := weights[back]
+				weight := b.Weights[back]
 				for i := 0; i < weight; i++ {
 					b.Order = append(b.Order, back)
 				}
@@ -68,7 +69,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 		logs := "\tNew weights!\n"
 		for i, bc := range b.Hosts {
 			color := utils.GetColorOfBack(bc)
-			weight := fmt.Sprintf("%d", weights[bc])
+			weight := fmt.Sprintf("%d", b.Weights[bc])
 			logs += fmt.Sprintf("\tw%d %s\n", i+1, utils.Color(weight, color))
 		}
 		logs += "\n"
@@ -76,7 +77,7 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 
 		logsCB := "\tNew weights!\n"
 		for i, bc := range b.Hosts {
-			logsCB += fmt.Sprintf("\tw%d %d\n", i+1, weights[bc])
+			logsCB += fmt.Sprintf("\tw%d %d\n", i+1, b.Weights[bc])
 		}
 		logsCB += "\n"
 		utils.ToLogs(logsCB)
