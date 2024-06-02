@@ -42,12 +42,12 @@ func (s *Server) update(backend string, sec float64) {
 		for back := range s.lastTimesBack {
 			// Ищем кол-во оставшихся раз использовать данный бэкенд
 			cnt := 0
-			for _, v := range s.balancer.Order {
+			for _, v := range s.balancer.Order[s.balancer.ReqCurNum:] {
 				if v == back {
 					cnt++
 				}
 			}
-			from := len(s.lastTimesBack[back]) - (s.balancer.Weights[back] - cnt) - 1
+			from := len(s.lastTimesBack[back]) - (s.balancer.Weights[back] - cnt)
 			if from > 0 {
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
 				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
