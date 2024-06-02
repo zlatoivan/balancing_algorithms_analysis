@@ -113,6 +113,7 @@ func (s *Server) clearLasts() {
 			fmt.Printf("lasts = %d | wcnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back])
 			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
 			if from > 0 {
+				fmt.Println(s.lastTimesBack[back][from:])
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
 				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
 			}
