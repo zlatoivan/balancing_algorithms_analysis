@@ -35,7 +35,28 @@ func reqAndGetSec(backend string) (int, float64) {
 
 func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
+	defer s.mx.Unlock()
 
+	// для синуса
+	if s.balancer.ReqCurNum == 0 {
+		for back := range s.lastTimesBack {
+			//l := len(s.lastTimesBack[back])
+			//s.lastTimesBack[back] = s.lastTimesBack[back][l-1:]
+			s.avgTimeBack[back] = 0
+		}
+		//s.lastTimesAll = s.lastTimesAll[len(s.lastTimesAll)-1:]
+		s.avgTimeAll = 0
+	}
+
+	// Back
+	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
+	s.avgTimeBack[backend] = utils.Mean(s.lastTimesBack[backend])
+
+	// All
+	s.lastTimesAll = append(s.lastTimesAll, sec)
+	s.avgTimeAll = utils.Mean(s.lastTimesAll)
+
+	// Для графика
 	// В тот кладет новое время
 	s.lastTimesBackGr[backend] = append(s.lastTimesBackGr[backend], sec)
 	if len(s.lastTimesBackGr[backend]) == 1 {
@@ -60,27 +81,6 @@ func (s *Server) update(backend string, sec float64) {
 	//for k, v := range s.lastTimesBackGr {
 	//	fmt.Println(k, v)
 	//}
-
-	// Back
-	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
-	s.avgTimeBack[backend] = utils.Mean(s.lastTimesBack[backend])
-
-	// All
-	s.lastTimesAll = append(s.lastTimesAll, sec)
-	s.avgTimeAll = utils.Mean(s.lastTimesAll)
-
-	// для синуса
-	if s.balancer.ReqCurNum == len(s.balancer.Order) {
-		for back := range s.lastTimesBack {
-			l := len(s.lastTimesBack[back])
-			s.lastTimesBack[back] = s.lastTimesBack[back][l-1:]
-			s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
-		}
-		s.lastTimesAll = s.lastTimesAll[len(s.lastTimesAll)-1:]
-		s.avgTimeAll = utils.Mean(s.lastTimesAll)
-	}
-
-	s.mx.Unlock()
 }
 
 func (s *Server) getLog(sec float64, statusCode int, backend string) string {

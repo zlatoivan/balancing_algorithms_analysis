@@ -18,6 +18,8 @@ type WeightedRoundRobin struct {
 
 func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 	b.mx.Lock()
+	defer b.mx.Unlock()
+
 	//fmt.Println("len(b.Order) =", len(b.Order))
 	//fmt.Println("b.ReqCurNum =", b.ReqCurNum)
 	if b.ReqCurNum == len(b.Order) {
@@ -82,7 +84,6 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 
 	backend := b.Order[b.ReqCurNum]
 	b.ReqCurNum++
-	b.mx.Unlock()
 
 	return backend
 }
