@@ -81,13 +81,13 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 
 	// Цветные логи
 	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", utils.Color(backend, c), utils.Color(secStr, c), utils.Color(status, c), utils.Color(avg, 96))
-	for i, b := range s.balancer.Hosts {
-		c = utils.GetColorOfBack(b)
-		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
-		logs += fmt.Sprintf("avg%d %s\n", i+1, utils.Color(avg, c))
-	}
-	avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	logs += fmt.Sprintf("avgΣ %s\n\n", utils.Color(avg, 96))
+	//for i, b := range s.balancer.Hosts {
+	//	c = utils.GetColorOfBack(b)
+	//	avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
+	//	logs += fmt.Sprintf("avg%d %s\n", i+1, utils.Color(avg, c))
+	//}
+	//avg = fmt.Sprintf("%.4f", s.avgTimeAll)
+	//logs += fmt.Sprintf("avgΣ %s\n\n", utils.Color(avg, 96))
 
 	// Черно белые логи для /logs
 	logsCB := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", backend, secStr, status, avg)
@@ -133,7 +133,7 @@ func (s *Server) ping() string {
 
 	logs := s.getLog(sec, statusCode, backend)
 
-	//fmt.Printf(logs)
+	fmt.Printf(logs)
 
 	return logs
 }
