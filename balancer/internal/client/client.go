@@ -42,7 +42,9 @@ func main() {
 	start := time.Now()
 	n := 10
 
-	sequentially(n)
+	for i := 0; i < n; i++ {
+		ping()
+	}
 
 	//parallel(n)
 
