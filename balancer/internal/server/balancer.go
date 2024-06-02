@@ -110,7 +110,7 @@ func (s *Server) clearLasts() {
 	if s.balancer.ReqCurNum == len(s.balancer.Order) {
 		for back := range s.lastTimesBack {
 			// Ищем кол-во оставшихся раз использовать данный бэкенд
-			//fmt.Printf("lasts = %d | wcnt = %d | cnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back], cnt)
+			fmt.Printf("lasts = %d | wcnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back])
 			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
 			if from > 0 {
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
@@ -130,11 +130,9 @@ func (s *Server) ping() string {
 
 	backend := s.balancer.ChooseBackend(s.avgTimeBack)
 
-	//s.mx.Lock()
 	statusCode, sec := reqAndGetSec(backend)
 
 	s.update(backend, sec)
-	//s.mx.Unlock()
 
 	logs := s.getLog(sec, statusCode, backend)
 
