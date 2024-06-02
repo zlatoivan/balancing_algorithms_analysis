@@ -37,6 +37,18 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	defer s.mx.Unlock()
 
+	// для синуса
+	if s.balancer.ReqCurNum == 1 {
+		for back := range s.lastTimesBack {
+			last := s.lastTimesBack[back][len(s.lastTimesBack[back])-1:]
+			s.lastTimesBack[back] = last
+			s.avgTimeBack[back] = last[0]
+		}
+		last := s.lastTimesAll[len(s.lastTimesAll)-1:]
+		s.lastTimesAll = last
+		s.avgTimeAll = last[0]
+	}
+
 	// Update Back
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
 	s.avgTimeBack[backend] = utils.Mean(s.lastTimesBack[backend])
@@ -105,30 +117,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	return logs
 }
 
-func (s *Server) clearLasts() {
-	// для синуса
-	if s.balancer.ReqCurNum == len(s.balancer.Order) {
-		for back := range s.lastTimesBack {
-			// Ищем кол-во оставшихся раз использовать данный бэкенд
-			fmt.Printf("lasts = %d | wcnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back])
-			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
-			if from > 0 {
-				fmt.Println(s.lastTimesBack[back][from:])
-				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
-				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
-			}
-		}
-		from := len(s.lastTimesAll) - len(s.balancer.Order)
-		if from > 0 {
-			s.lastTimesAll = s.lastTimesAll[from:]
-			s.avgTimeAll = utils.Mean(s.lastTimesAll)
-		}
-	}
-}
-
 func (s *Server) ping() string {
-	s.clearLasts()
-
 	backend := s.balancer.ChooseBackend(s.avgTimeBack)
 
 	statusCode, sec := reqAndGetSec(backend)
