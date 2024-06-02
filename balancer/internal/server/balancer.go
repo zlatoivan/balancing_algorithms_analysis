@@ -37,19 +37,17 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	defer s.mx.Unlock()
 
-	// для синуса
+	// для синуса. Очистить все данные
 	if s.balancer.ReqCurNum == 1 {
 		for back := range s.lastTimesBack {
 			if len(s.lastTimesBack[back]) > 0 {
-				last := s.lastTimesBack[back][len(s.lastTimesBack[back])-1:]
-				s.lastTimesBack[back] = last
-				s.avgTimeBack[back] = last[0]
+				s.lastTimesBack[back] = make([]float64, 0)
+				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
 			}
 		}
 		if len(s.lastTimesAll) > 0 {
-			last := s.lastTimesAll[len(s.lastTimesAll)-1:]
-			s.lastTimesAll = last
-			s.avgTimeAll = last[0]
+			s.lastTimesAll = make([]float64, 0)
+			s.avgTimeAll = utils.Mean(s.lastTimesAll)
 		}
 	}
 
