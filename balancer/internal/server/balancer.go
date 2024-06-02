@@ -87,8 +87,7 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	//	logs += fmt.Sprintf("avg%d %s\n", i+1, utils.Color(avg, c))
 	//}
 	//avg = fmt.Sprintf("%.4f", s.avgTimeAll)
-	//logs += fmt.Sprintf("avgΣ %s\n", utils.Color(avg, 96))
-	logs += "\n"
+	//logs += fmt.Sprintf("avgΣ %s\n\n", utils.Color(avg, 96))
 
 	// Черно белые логи для /logs
 	logsCB := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", backend, secStr, status, avg)
