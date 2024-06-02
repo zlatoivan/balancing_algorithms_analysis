@@ -37,35 +37,11 @@ func (s *Server) update(backend string, sec float64) {
 	s.mx.Lock()
 	defer s.mx.Unlock()
 
-	// для синуса
-	if s.balancer.ReqCurNum == 1 {
-		for back := range s.lastTimesBack {
-			// Ищем кол-во оставшихся раз использовать данный бэкенд
-			cnt := 0
-			for _, v := range s.balancer.Order[s.balancer.ReqCurNum:] {
-				if v == back {
-					cnt++
-				}
-			}
-			fmt.Printf("lasts = %d | wcnt = %d | cnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back], cnt)
-			from := len(s.lastTimesBack[back]) - (s.balancer.Weights[back] - cnt)
-			if from > 0 {
-				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
-				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
-			}
-		}
-		from := len(s.lastTimesAll) - s.balancer.ReqCurNum
-		if from > 0 {
-			s.lastTimesAll = s.lastTimesAll[from:]
-			s.avgTimeAll = utils.Mean(s.lastTimesAll)
-		}
-	}
-
-	// Back
+	// Update Back
 	s.lastTimesBack[backend] = append(s.lastTimesBack[backend], sec)
 	s.avgTimeBack[backend] = utils.Mean(s.lastTimesBack[backend])
 
-	// All
+	// Update All
 	s.lastTimesAll = append(s.lastTimesAll, sec)
 	s.avgTimeAll = utils.Mean(s.lastTimesAll)
 
@@ -129,7 +105,29 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	return logs
 }
 
+func (s *Server) clearLasts() {
+	// для синуса
+	if s.balancer.ReqCurNum == len(s.balancer.Order) {
+		for back := range s.lastTimesBack {
+			// Ищем кол-во оставшихся раз использовать данный бэкенд
+			//fmt.Printf("lasts = %d | wcnt = %d | cnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back], cnt)
+			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
+			if from > 0 {
+				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
+				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
+			}
+		}
+		from := len(s.lastTimesAll) - len(s.balancer.Order)
+		if from > 0 {
+			s.lastTimesAll = s.lastTimesAll[from:]
+			s.avgTimeAll = utils.Mean(s.lastTimesAll)
+		}
+	}
+}
+
 func (s *Server) ping() string {
+	s.clearLasts()
+
 	backend := s.balancer.ChooseBackend(s.avgTimeBack)
 
 	//s.mx.Lock()
