@@ -42,11 +42,9 @@ func main() {
 	start := time.Now()
 	n := 10
 
-	for i := 0; i < n; i++ {
-		ping()
-	}
+	//sequentially(n)
 
-	//parallel(n)
+	parallel(n)
 
 	sec := time.Since(start).Seconds()
 	rps := float64(n) / sec
