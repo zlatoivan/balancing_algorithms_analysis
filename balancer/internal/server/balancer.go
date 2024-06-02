@@ -41,12 +41,16 @@ func (s *Server) update(backend string, sec float64) {
 	if s.balancer.ReqCurNum == 1 {
 		for back := range s.lastTimesBack {
 			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
-			s.lastTimesBack[back] = s.lastTimesBack[back][from:]
-			s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
+			if from > 0 {
+				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
+				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
+			}
 		}
-		from := len(s.balancer.Order)
-		s.lastTimesAll = s.lastTimesAll[from:]
-		s.avgTimeAll = utils.Mean(s.lastTimesAll)
+		from := len(s.lastTimesAll) - len(s.balancer.Order)
+		if from > 0 {
+			s.lastTimesAll = s.lastTimesAll[from:]
+			s.avgTimeAll = utils.Mean(s.lastTimesAll)
+		}
 	}
 
 	// Back
