@@ -111,7 +111,7 @@ func (s *Server) clearLasts() {
 		for back := range s.lastTimesBack {
 			// Ищем кол-во оставшихся раз использовать данный бэкенд
 			//fmt.Printf("lasts = %d | wcnt = %d | cnt = %d\n", len(s.lastTimesBack[back]), s.balancer.Weights[back], cnt)
-			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back] + 1
+			from := len(s.lastTimesBack[back]) - s.balancer.Weights[back]
 			if from > 0 {
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
 				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
