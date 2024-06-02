@@ -66,20 +66,18 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 			b.ReqCurNum = 0
 		}
 
-		logs := "\tNew weights!\n"
+		logs := ""
 		for i, bc := range b.Hosts {
 			color := utils.GetColorOfBack(bc)
 			weight := fmt.Sprintf("%d", b.Weights[bc])
-			logs += fmt.Sprintf("\tw%d %s\n", i+1, utils.Color(weight, color))
+			logs += fmt.Sprintf("\tupd w%d %s\n", i+1, utils.Color(weight, color))
 		}
-		logs += "\n"
 		fmt.Printf(logs)
 
-		logsCB := "\tNew weights!\n"
+		logsCB := ""
 		for i, bc := range b.Hosts {
-			logsCB += fmt.Sprintf("\tw%d %d\n", i+1, b.Weights[bc])
+			logsCB += fmt.Sprintf("\tupd w%d %d\n", i+1, b.Weights[bc])
 		}
-		logsCB += "\n"
 		utils.ToLogs(logsCB)
 	}
 
