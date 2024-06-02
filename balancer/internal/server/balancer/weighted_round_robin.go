@@ -36,7 +36,10 @@ func (b *WeightedRoundRobin) ChooseBackend(avgs map[string]float64) string {
 			}
 			// Считаем веса для каждого бэкенда
 			for k, v := range avgs {
-				weights[k] = int(math.Round(m/v)) % 10 // !!!
+				weights[k] = int(math.Round(m / v))
+				if weights[k] > len(b.Hosts)*2 { // !!! для синуса!
+					weights[k] = len(b.Hosts) * 2
+				}
 			}
 
 			// Сортируем и создаем последовательность вызовов

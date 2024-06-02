@@ -69,6 +69,17 @@ func (s *Server) update(backend string, sec float64) {
 	s.lastTimesAll = append(s.lastTimesAll, sec)
 	s.avgTimeAll = utils.Mean(s.lastTimesAll)
 
+	// для синуса
+	if s.balancer.ReqCurNum == len(s.balancer.Order) {
+		for back := range s.lastTimesBack {
+			l := len(s.lastTimesBack[back])
+			s.lastTimesBack[back] = s.lastTimesBack[back][l-1:]
+			s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
+		}
+		s.lastTimesAll = s.lastTimesAll[len(s.lastTimesAll)-1:]
+		s.avgTimeAll = utils.Mean(s.lastTimesAll)
+	}
+
 	s.mx.Unlock()
 }
 
@@ -77,8 +88,9 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 	status := fmt.Sprintf("%d", statusCode)
 	avg := fmt.Sprintf("%.4f", s.avgTimeAll)
 	c := utils.GetColorOfBack(backend)
-	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", utils.Color(backend, c), utils.Color(secStr, c), utils.Color(status, c), utils.Color(avg, 96))
 
+	// Цветные логи
+	logs := fmt.Sprintf("balancer choice %s | took %s sec | status %s | average %s sec\n", utils.Color(backend, c), utils.Color(secStr, c), utils.Color(status, c), utils.Color(avg, 96))
 	for i, b := range s.balancer.Hosts {
 		c = utils.GetColorOfBack(b)
 		avg = fmt.Sprintf("%.4f", s.avgTimeBack[b])
@@ -100,25 +112,10 @@ func (s *Server) getLog(sec float64, statusCode int, backend string) string {
 
 	utils.ToLogs(logsCB)
 
-	//data := []byte(logsCB)
-	//err := os.WriteFile("logs.txt", data, 0644)
-	//if err != nil {
-	//	fmt.Printf("os.WriteFile: %v", err)
-	//}
-
-	//allTms := ""
-	//for back, times := range s.lastTimesBack {
-	//	tms := ""
-	//	for _, tt := range times {
-	//		tms += fmt.Sprintf("%.4f ", tt)
-	//	}
-	//	allTms += fmt.Sprintf("back %s | avg %.4f | times %v\n", back, s.avgTimeBack[back], tms)
-	//}
-
 	return logs
 }
 
-func (s *Server) ping(w http.ResponseWriter) string {
+func (s *Server) ping() string {
 	backend := s.balancer.ChooseBackend(s.avgTimeBack)
 
 	//s.mx.Lock()
@@ -127,36 +124,23 @@ func (s *Server) ping(w http.ResponseWriter) string {
 	s.update(backend, sec)
 	//s.mx.Unlock()
 
-	ans := s.getLog(sec, statusCode, backend)
+	logs := s.getLog(sec, statusCode, backend)
 
-	fmt.Printf(ans)
+	fmt.Printf(logs)
 
-	//_, err := w.Write([]byte(ans))
-	//if err != nil {
-	//	fmt.Printf("w.Write: %v\n", err)
-	//}
-
-	return ans
+	return logs
 }
 
 func (s *Server) Balancer(w http.ResponseWriter, _ *http.Request) {
 	// здесь клиентом отправить запрос на тот бэкенд, который вернет балансировщик
 
-	s.ping(w)
+	s.ping()
 
 	t, _ := template.ParseFiles("static/template/index.html")
 	err := t.Execute(w, "")
 	if err != nil {
 		log.Printf("t.Execute: %v", err)
 	}
-
-	//wg := sync.WaitGroup{}
-	//wg.Add(1)
-	//go func() {
-	//	s.ping(w)
-	//	wg.Done()
-	//}()
-	//wg.Wait()
 }
 
 func (s *Server) Reload(_ http.ResponseWriter, _ *http.Request) {
