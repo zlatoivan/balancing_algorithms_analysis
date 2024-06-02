@@ -128,7 +128,7 @@ func (s *Server) ping() string {
 
 	statusCode, sec := reqAndGetSec(backend)
 
-	s.clearLasts()
+	//s.clearLasts()
 	s.update(backend, sec)
 
 	logs := s.getLog(sec, statusCode, backend)
