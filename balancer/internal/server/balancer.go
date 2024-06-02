@@ -47,7 +47,7 @@ func (s *Server) update(backend string, sec float64) {
 					cnt++
 				}
 			}
-			from := len(s.lastTimesBack[back]) - (s.balancer.Weights[back] - cnt)
+			from := len(s.lastTimesBack[back]) - (s.balancer.Weights[back] - cnt) - 1
 			if from > 0 {
 				s.lastTimesBack[back] = s.lastTimesBack[back][from:]
 				s.avgTimeBack[back] = utils.Mean(s.lastTimesBack[back])
