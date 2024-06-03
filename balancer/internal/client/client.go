@@ -40,7 +40,7 @@ func parallel(n int) {
 
 func main() {
 	start := time.Now()
-	n := 10
+	n := 1
 
 	sequentially(n)
 
